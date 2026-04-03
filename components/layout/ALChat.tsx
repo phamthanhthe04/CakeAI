@@ -1,7 +1,7 @@
 /**
- * AI Agent Component
- * Showcase section for AI Agent features with scroll animations
- * Two-column layout: image slides from left, features from right
+ * AI Chat Component
+ * Showcase section for AI Chat features with scroll animations
+ * Two-column layout: features slide from left, image from right
  * All items slide up from bottom on scroll
  */
 
@@ -9,46 +9,59 @@
 
 import {
   Badge,
+  SparklesIcon,
   BrainIcon,
   MessageSquareIcon,
   WorkflowIcon,
-  UserIcon,
   FeatureCard,
   OptimizedImage,
-  HeadphonesIcon,
-  SettingsIcon,
+  ImageIcon,
+  FileTextIcon,
+  Link2Icon,
+  IconWrapper,
 } from '@/components';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 const features = [
   {
     icon: BrainIcon,
-    title: 'Hiểu ngữ cảnh sử dụng',
+    title: 'Tích hợp nhiều mô hình AI hàng đầu',
     description:
-      'AI Agent hiểu bối cảnh công việc và đưa ra phản hồi phù hợp với từng tình huống cụ thể.',
+      'Sử dụng linh hoạt nhiều mô hình AI tiên tiến trong cùng một nền tảng, được cập nhật liên tục.',
+    badges: [
+      { text: 'Không cần dùng nhiều công cụ rời rạc', icon: SparklesIcon },
+      { text: 'Không cần kiến thức kỹ thuật', icon: SparklesIcon },
+    ],
   },
   {
     icon: MessageSquareIcon,
     title: 'Ghi nhớ thông tin làm việc',
     description:
       'Lưu trữ và học hỏi từ các cuộc trò chuyện trước để phục vụ bạn tốt hơn.',
+    badges: [
+      { text: 'Trả lời chính xác, có cập nhật', icon: SparklesIcon },
+      { text: 'Phục vụ nghiên cứu, báo cáo', icon: SparklesIcon },
+    ],
   },
   {
     icon: WorkflowIcon,
     title: 'Thực hiện theo quy trình',
     description:
       'Không chỉ trả lời câu hỏi mà còn thực hiện công việc theo quy trình được định sẵn.',
+    badges: [
+      { text: 'Tự động hiểu nội dung', icon: SparklesIcon },
+      { text: 'Phản hồi thông minh', icon: SparklesIcon },
+    ],
   },
 ];
 
-const useCases = [
-  { icon: UserIcon, text: 'Marketing' },
-  { icon: MessageSquareIcon, text: 'Bán hàng' },
-  { icon: SettingsIcon, text: 'Hành chính - Nhân sự' },
-  { icon: HeadphonesIcon, text: 'Chăm sóc khách hàng' },
+const inputTypes = [
+  { icon: ImageIcon, text: 'Hình ảnh' },
+  { icon: FileTextIcon, text: 'PDF / Word / TXT' },
+  { icon: Link2Icon, text: 'Link website' },
 ];
 
-export function AIAgentSection() {
+export function AIChatSection() {
   const { ref: leftRef, isInView: leftInView } = useScrollAnimation({
     threshold: 0.2,
     once: true,
@@ -57,10 +70,12 @@ export function AIAgentSection() {
     threshold: 0.2,
     once: true,
   });
-  const { ref: useCasesRef, isInView: useCasesInView } = useScrollAnimation({
-    threshold: 0.2,
-    once: true,
-  });
+  const { ref: inputTypesRef, isInView: inputTypesInView } = useScrollAnimation(
+    {
+      threshold: 0.2,
+      once: true,
+    },
+  );
 
   return (
     <section className='py-20 md:py-28'>
@@ -72,9 +87,9 @@ export function AIAgentSection() {
             animation: 'slideUpOnce 0.8s ease-out forwards',
           }}
         >
-          <Badge tone='gray' text='AI Agent' />
+          <Badge tone='gray' text='AI Chat' />
           <h2 className='text-3xl md:text-4xl font-bold text-foreground1 mb-4'>
-            Trợ lý thông minh cho
+            Nền tảng trò chuyện AI
             <span
               style={{
                 background: 'var(--gradient-primary)',
@@ -83,36 +98,24 @@ export function AIAgentSection() {
               }}
             >
               {' '}
-              công việc thực tế
+              không giới hạn
             </span>
           </h2>
           <p className='text-muted-foreground text-lg'>
-            AI Agent CakeAI giúp cá nhân và tổ chức tự động hóa công việc, tăng
-            hiệu suất và ra quyết định hiệu quả hơn mỗi ngày.
+            CakeAI không chỉ là chatbot thông thường, mà là nền tảng trò chuyện
+            AI thông minh phục vụ công việc, học tập và quản lý trong thực tế.
           </p>
         </div>
 
         {/* Main Grid */}
         <div className='grid lg:grid-cols-2 gap-12 items-center mb-12'>
-          {/* Left - Image - Slide from Left */}
+          {/* Left - Features - Slide from Left */}
           <div
             ref={leftRef}
-            className='order-2 lg:order-1 transition-all duration-1000 ease-out'
+            className='space-y-6 transition-all duration-1000 ease-out'
             style={{
               opacity: leftInView ? 1 : 0,
               transform: leftInView ? 'translateX(0)' : 'translateX(-100px)',
-            }}
-          >
-            <OptimizedImage imageKey='agent' />
-          </div>
-
-          {/* Right - Features - Slide from Right */}
-          <div
-            ref={rightRef}
-            className='space-y-4 order-1 lg:order-2 transition-all duration-1000 ease-out'
-            style={{
-              opacity: rightInView ? 1 : 0,
-              transform: rightInView ? 'translateX(0)' : 'translateX(100px)',
             }}
           >
             {features.map((feature, idx) => {
@@ -121,8 +124,8 @@ export function AIAgentSection() {
                 <div
                   key={idx}
                   style={{
-                    opacity: rightInView ? 1 : 0,
-                    transform: rightInView
+                    opacity: leftInView ? 1 : 0,
+                    transform: leftInView
                       ? 'translateY(0)'
                       : 'translateY(20px)',
                     transition: `all 0.6s ease-out ${idx * 0.1}s`,
@@ -132,42 +135,67 @@ export function AIAgentSection() {
                     icon={<Icon className='text-accent' size={18} />}
                     title={feature.title}
                     description={feature.description}
+                    badges={feature.badges.map((badge) => ({
+                      text: badge.text,
+                      icon: <badge.icon className='text-accent' size={16} />,
+                    }))}
                   />
                 </div>
               );
             })}
           </div>
+
+          {/* Right - Image - Slide from Right */}
+          <div
+            ref={rightRef}
+            className='transition-all duration-1000 ease-out'
+            style={{
+              opacity: rightInView ? 1 : 0,
+              transform: rightInView ? 'translateX(0)' : 'translateX(100px)',
+            }}
+          >
+            <OptimizedImage imageKey='chat' />
+          </div>
         </div>
 
-        {/* Use Cases */}
+        {/* Input Types Support */}
         <div
-          ref={useCasesRef}
+          ref={inputTypesRef}
           className='opacity-0 transition-all duration-700 ease-out'
           style={{
-            animation: useCasesInView
+            animation: inputTypesInView
               ? 'slideUpOnce 0.8s ease-out forwards'
               : 'none',
           }}
         >
           <div
-            className='rounded-2xl border border-border p-8'
+            className='rounded-2xl border border-border p-8 md:p-12 text-white'
             style={{
-              background: 'var(--gradient-card)',
+              background: 'hsl(var(--secondary) / 1)',
             }}
           >
-            <h3 className='text-lg font-semibold text-foreground1 mb-6 text-center'>
-              Phù hợp cho nhiều lĩnh vực
-            </h3>
-            <div className='flex flex-wrap items-center justify-center gap-4'>
-              {useCases.map((useCase, idx) => {
-                const Icon = useCase.icon;
+            <div className='text-center mb-8'>
+              <h3 className='text-2xl font-bold mb-2'>
+                Hỗ trợ đa dạng đầu vào
+              </h3>
+              <p className='text-[#ffffffb3]'>
+                Tải lên và phân tích nhiều loại dữ liệu
+              </p>
+            </div>
+            <div className='flex flex-wrap items-center justify-center gap-6'>
+              {inputTypes.map((input, idx) => {
+                const Icon = input.icon;
                 return (
                   <Badge
                     key={idx}
-                    tone='soft'
-                    text={useCase.text}
-                    textClassName='text-foreground1'
-                    icon={<Icon className='text-accent' size={16} />}
+                    text={input.text}
+                    textClassName='text-white'
+                    className='flex flex-col bg-white/10 rounded-lg px-4 py-3'
+                    icon={
+                      <IconWrapper size='lg' variant='gradient'>
+                        <Icon className='text-white' size={24} />
+                      </IconWrapper>
+                    }
                   />
                 );
               })}
