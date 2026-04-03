@@ -123,10 +123,12 @@ export function ImageSection() {
               style={{ opacity: 1, transform: 'none' }}
             >
               {/* Main Image */}
-              <div className='flex items-center gap-2 mb-6'>
+              <div className='flex-none gap-2 mb-6'>
                 <Badge
                   text='Phong cách có sẵn'
-                  icon={<ImageIcon className='text-white' size={24} />}
+                  textClassName='text-[#1b3232]'
+                  icon={<ImageIcon className='text-accent' size={20} />}
+                  className='border-0 border-border bg-transparent px-3 py-1.5 text-sm font-medium'
                 />
               </div>
 
@@ -190,7 +192,7 @@ export function ImageSection() {
                       : 'translateY(20px)',
                     transition: `all 0.6s ease-out ${idx * 0.1}s`,
                   }}
-                  className='flex gap-4 rounded-xl border border-border p-5 transition-all duration-300 hover:shadow-lg'
+                  className='flex gap-4 rounded-xl border-0 border-border p-5 transition-all duration-300 hover:shadow-lg'
                 >
                   <IconWrapper size='md' variant='gradient'>
                     <Icon className='text-white' size={24} />

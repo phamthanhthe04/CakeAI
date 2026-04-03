@@ -150,7 +150,7 @@ export function AIAgentSection() {
           }}
         >
           <div
-            className='rounded-2xl border border-border p-8'
+            className='rounded-2xl border-0 border-border p-8'
             style={{
               background: 'var(--gradient-card)',
             }}

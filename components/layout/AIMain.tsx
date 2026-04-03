@@ -27,14 +27,14 @@ export function AIMainSection() {
     <section className='py-20 md:py-28'>
       <div className='container mx-auto px-4 max-w-7xl'>
         {/* Header */}
-        <div className='max-w-3xl mx-auto text-center mb-12 space-y-4'>
+        <div className='mx-auto text-center mb-12 space-y-4'>
           <Badge
             tone='gray'
             icon={<SparklesIcon className='text-accent' size={16} />}
             text='Một tài khoản - nhiều sức mạnh AI'
           />
           <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold text-foreground1 leading-tight mb-6 text-center'>
-            Nền tảng AI
+            Nền tảng AI<span> </span>
             <span
               style={{
                 background: 'var(--gradient-primary)',
@@ -60,6 +60,7 @@ export function AIMainSection() {
             text='Trải nghiệm miễn phí'
             size='xl'
             textClassName='text-white text-xl'
+            iconPosition='right'
             style={{ background: 'var(--gradient-primary)', border: 'none' }}
             icon={<ArrowRightIcon className='text-white' size={16} />}
           />

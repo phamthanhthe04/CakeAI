@@ -13,13 +13,13 @@ export default function HomePage() {
   return (
     <div className='relative min-h-screen overflow-hidden'>
       <AIMainSection />
-      <VideoSection />
-      <AIChatSection />
       <AIAgentSection />
+      <AIChatSection />
+      <VideoSection />
       <ImageSection />
       <MantualSection />
-      <UserSection />
       <WhySection />
+      <UserSection />
       <FaqSection />
       <ExperienceSection />
     </div>

@@ -14,6 +14,7 @@ type BaseStyleProps = {
   iconClassName?: string;
   variant?: 'primary' | 'outline' | 'none';
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  iconPosition?: 'left' | 'right';
 };
 
 type ButtonModeProps = BaseStyleProps &
@@ -58,6 +59,7 @@ export function BaseButton({
   iconClassName,
   variant = 'none',
   size = 'md',
+  iconPosition = 'left',
   ...rest
 }: BaseButtonProps) {
   const mergedClassName = cn(
@@ -74,20 +76,28 @@ export function BaseButton({
         }
       : undefined;
 
-  const content = (
-    <>
-      {icon ? (
-        <span className={cn('inline-flex shrink-0', iconClassName)}>
-          {icon}
-        </span>
-      ) : null}
-      <span
-        className={cn('font-semibold leading-4 select-none', textClassName)}
-      >
-        {text}
-      </span>
-    </>
+  const iconEl = icon ? (
+    <span className={cn('inline-flex shrink-0', iconClassName)}>{icon}</span>
+  ) : null;
+
+  const textEl = (
+    <span className={cn('font-semibold leading-4 select-none', textClassName)}>
+      {text}
+    </span>
   );
+
+  const content =
+    iconPosition === 'right' ? (
+      <>
+        {textEl}
+        {iconEl}
+      </>
+    ) : (
+      <>
+        {iconEl}
+        {textEl}
+      </>
+    );
 
   if ('href' in rest && typeof rest.href === 'string') {
     const { href, style, ...anchorProps } = rest;
