@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CakeAI Next.js Structure
 
-## Getting Started
+Cấu trúc dự án được tổ chức theo hướng **App Router + Domain Modules** để dễ mở rộng, dễ onboard, và dễ bảo trì.
 
-First, run the development server:
+## Cấu trúc thư mục
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```text
+app/
+	globals.css
+	layout.tsx
+	page.tsx
+
+components/
+	layout/
+		page-container.tsx
+	ui/
+		section-title.tsx
+	index.ts
+
+features/
+	home/
+		components/
+			home-hero.tsx
+		index.ts
+	index.ts
+
+lib/
+	constants/
+		site.ts
+	utils/
+		cn.ts
+	index.ts
+
+services/
+	api/
+		client.ts
+	index.ts
+
+config/
+	env.ts
+
+types/
+	app.ts
+	index.ts
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Quy ước maintainable
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `app/`: chỉ giữ file routing/conventions của Next (`page`, `layout`, `loading`, `error`, `route`).
+- `features/`: chứa logic theo domain nghiệp vụ (ví dụ `home`, `auth`, `blog`).
+- `components/`: UI dùng chung, không chứa business logic.
+- `lib/`: constants và utility thuần.
+- `services/`: gateway giao tiếp API/external systems.
+- `types/`: type dùng lại toàn app.
+- `index.ts` (barrel): export tập trung để import ngắn và nhất quán.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Cách thêm module mới
 
-## Learn More
+Ví dụ thêm module `blog`:
 
-To learn more about Next.js, take a look at the following resources:
+1. Tạo `features/blog/components/` và `features/blog/index.ts`.
+2. Tạo route trong `app/blog/page.tsx`.
+3. Đặt API call vào `services/api/`.
+4. Type shared đặt trong `types/` hoặc local trong `features/blog/types`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Chạy dự án
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm install
+npm run dev
+```
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Mở `http://localhost:3000` để xem kết quả.
