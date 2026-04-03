@@ -79,7 +79,7 @@ export function VideoSection() {
               return (
                 <div
                   key={idx}
-                  className='flex gap-4 rounded-xl border border-border/50 p-5 transition-all duration-300 hover:shadow-lg'
+                  className='flex gap-4 rounded-xl border-0 border-border/50 p-5 transition-all duration-300 hover:shadow-lg'
                   style={{
                     background: 'var(--gradient-card)',
                     transition: `all 0.6s ease-out ${idx * 0.1}s`,
@@ -116,19 +116,25 @@ export function VideoSection() {
           {/* Video Preview - Slide from Right */}
           <div className='relative transition-all duration-1000 ease-out'>
             <div
-              className='rounded-2xl border border-border/50 overflow-hidden'
+              className='rounded-2xl border-0 border-border/50 agent_shadowCard__OMD5Z overflow-hidden'
               style={{
                 background: 'var(--gradient-card)',
               }}
             >
-              <div className='aspect-video relative'>
+              {/* Image Container with aspect ratio */}
+              <div
+                className='relative w-full overflow-hidden'
+                style={{
+                  aspectRatio: '16/9',
+                }}
+              >
                 <OptimizedImage
                   imageKey='video'
                   className='w-full h-full object-cover'
                 />
 
                 {/* Play Button Overlay */}
-                <div className='absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors'>
+                <div className='absolute inset-0 flex items-center justify-center bg-transparent'>
                   <button
                     className='w-20 h-20 rounded-full flex items-center justify-center cursor-pointer transition-transform hover:scale-110'
                     style={{

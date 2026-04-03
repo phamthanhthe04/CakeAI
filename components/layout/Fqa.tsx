@@ -57,13 +57,8 @@ function FAQItem({ question, answer, isOpen, onToggle }: FAQItemProps) {
   const sectionVisibleStyle = { opacity: 1, transform: 'none' as const };
 
   return (
-    <div style={sectionVisibleStyle}>
-      <div
-        className='rounded-xl border border-border transition-all duration-300'
-        style={{
-          background: 'var(--gradient-card)',
-        }}
-      >
+    <div className='' style={sectionVisibleStyle}>
+      <div className='rounded-xl bg-[#edf2f24d] border border-solid border-[#dce5e580] rounded-xl px-6 border-[#0094944d] transition-all duration-300'>
         <button
           onClick={onToggle}
           className='w-full flex items-center justify-between text-left font-semibold text-foreground1 hover:text-accent transition-colors py-5 px-6'
@@ -92,7 +87,7 @@ export function FaqSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className='py-20 bg-secondary/5'>
+    <section className='py-20 bg-[#f9fbfb]'>
       <div className='container mx-auto px-4 max-w-7xl'>
         {/* Header */}
         <div className='max-w-3xl mx-auto text-center mb-12 space-y-4'>

@@ -52,8 +52,8 @@ export function UserSection() {
   });
 
   return (
-    <section className='py-20 md:py-28 bg-secondary/5' ref={containerRef}>
-      <div className='container mx-auto px-4 max-w-7xl'>
+    <section className='py-20 md:py-28 bg-[#edf2f24d]' ref={containerRef}>
+      <div className='container mx-auto px-4 max-w-7xl '>
         {/* Header */}
         <div
           className='max-w-3xl mx-auto text-center mb-12 opacity-0 transition-all duration-700 ease-out'

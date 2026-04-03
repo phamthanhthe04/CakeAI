@@ -18,6 +18,8 @@ interface OptimizedImageProps {
   className?: string;
   containerClassName?: string;
   fill?: boolean;
+  maxWidth?: string;
+  maxHeight?: string;
 }
 
 export function OptimizedImage({
@@ -25,21 +27,29 @@ export function OptimizedImage({
   className,
   containerClassName,
   fill,
+  maxWidth,
+  maxHeight,
 }: OptimizedImageProps) {
   const image = IMAGES[imageKey];
 
   return (
-    <div className={cn('relative', containerClassName)}>
+    <div
+      className={cn('relative', containerClassName)}
+      style={{
+        maxWidth: maxWidth || 'none',
+        maxHeight: maxHeight || 'none',
+      }}
+    >
       <Image
         src={image.path}
         alt={image.alt}
-        width={image.width}
-        height={image.height}
+        width={fill ? undefined : image.width}
+        height={fill ? undefined : image.height}
         priority={image.priority}
         fill={fill}
         className={cn(
           'rounded-2xl agent_shadowCard__OMD5Z',
-          !fill && 'w-full max-w-md mx-auto',
+          !fill && 'w-full h-full',
           className,
         )}
       />

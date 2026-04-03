@@ -7,9 +7,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Badge } from '@/components';
+import { Badge, CircleCheckBigIcon } from '@/components';
 import { SparklesIcon } from '@/components/ui/icon';
-import { CheckCircle2, Play } from 'lucide-react';
+import { Play } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 const steps = [
@@ -38,7 +38,7 @@ export function MantualSection() {
   });
 
   return (
-    <section className='py-20 bg-secondary/5' ref={containerRef}>
+    <section className='py-20 bg-[#edf2f24d]' ref={containerRef}>
       <div className='container mx-auto px-4 max-w-7xl'>
         {/* Header - Slide up from bottom */}
         <div
@@ -145,7 +145,7 @@ export function MantualSection() {
                   <p className='text-foreground1 font-medium flex-1'>
                     {step.title}
                   </p>
-                  <CheckCircle2 className='w-5 h-5 text-accent' />
+                  <CircleCheckBigIcon className='w-5 h-5 text-accent' />
                 </div>
               </div>
             ))}
@@ -159,8 +159,8 @@ export function MantualSection() {
                   : 'none',
               }}
             >
-              <p className='text-muted-foreground mt-6 p-4 rounded-lg border border-border bg-secondary/5'>
-                💡 <strong className='text-foreground1'>Mẹo:</strong> Bạn có thể
+              <p className='text-muted-foreground mt-6 rounded-lg'>
+                💡 <strong className='text-[#628484]'>Mẹo:</strong> Bạn có thể
                 bắt đầu với AI Chat để làm quen, sau đó khám phá các công cụ
                 khác như Image AI và Video AI.
               </p>

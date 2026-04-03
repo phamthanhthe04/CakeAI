@@ -17,6 +17,7 @@ import {
   OptimizedImage,
   HeadphonesIcon,
   SettingsIcon,
+  IconWrapper,
 } from '@/components';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
@@ -97,13 +98,13 @@ export function AIAgentSection() {
           {/* Left - Image - Slide from Left */}
           <div
             ref={leftRef}
-            className='order-2 lg:order-1 transition-all duration-1000 ease-out'
+            className='order-2 lg:order-1 transition-all duration-1000 ease-out mx-auto'
             style={{
               opacity: leftInView ? 1 : 0,
               transform: leftInView ? 'translateX(0)' : 'translateX(-100px)',
             }}
           >
-            <OptimizedImage imageKey='agent' />
+            <OptimizedImage imageKey='agent' maxWidth='448px' />
           </div>
 
           {/* Right - Features - Slide from Right */}
@@ -129,7 +130,11 @@ export function AIAgentSection() {
                   }}
                 >
                   <FeatureCard
-                    icon={<Icon className='text-accent' size={18} />}
+                    icon={
+                      <IconWrapper variant='gradient'>
+                        <Icon className='text-white' size={24} />
+                      </IconWrapper>
+                    }
                     title={feature.title}
                     description={feature.description}
                   />

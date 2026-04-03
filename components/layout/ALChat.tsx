@@ -132,7 +132,11 @@ export function AIChatSection() {
                   }}
                 >
                   <FeatureCard
-                    icon={<Icon className='text-accent' size={18} />}
+                    icon={
+                      <IconWrapper variant='gradient'>
+                        <Icon className='text-white' size={24} />
+                      </IconWrapper>
+                    }
                     title={feature.title}
                     description={feature.description}
                     badges={feature.badges.map((badge) => ({
@@ -154,7 +158,7 @@ export function AIChatSection() {
               transform: rightInView ? 'translateX(0)' : 'translateX(100px)',
             }}
           >
-            <OptimizedImage imageKey='chat' />
+            <OptimizedImage imageKey='chat' maxWidth='448px' />
           </div>
         </div>
 

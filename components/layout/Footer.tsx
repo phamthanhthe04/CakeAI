@@ -30,13 +30,7 @@ export function Footer() {
   ];
 
   return (
-    <footer
-      className='py-16'
-      style={{
-        backgroundColor: 'hsl(var(--muted) / 0.3)',
-        borderTop: '1px solid hsl(var(--border) / 0.5)',
-      }}
-    >
+    <footer className='py-16'>
       <div className='w-full px-4 mx-auto'>
         {/* Main Grid */}
         <div className='grid md:grid-cols-4 gap-12 pb-12'>

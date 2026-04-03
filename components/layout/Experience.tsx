@@ -16,7 +16,7 @@ export function ExperienceSection() {
   const sectionVisibleStyle = { opacity: 1, transform: 'none' as const };
 
   return (
-    <section className='py-20 md:py-28 relative overflow-hidden'>
+    <section className='relative overflow-hidden'>
       {/* Background Gradients */}
       <div className='absolute inset-0 overflow-hidden'>
         <div

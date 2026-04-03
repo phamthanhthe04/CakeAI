@@ -119,7 +119,7 @@ export function ImageSection() {
             }}
           >
             <div
-              className='rounded-2xl border-0 border-border p-6 overflow-hidden shadow-2xl'
+              className='rounded-2xl border-0 border-border p-6 overflow-hidden shadow-lg'
               style={{ opacity: 1, transform: 'none' }}
             >
               {/* Main Image */}
@@ -217,7 +217,7 @@ export function ImageSection() {
                 transform: rightInView ? 'translateY(0)' : 'translateY(20px)',
                 transition: 'all 0.6s ease-out 0.3s',
               }}
-              className='rounded-xl border border-border p-5'
+              className='rounded-xl border border-solid border-[#00949433] p-5'
             >
               <p className='text-sm font-medium text-foreground1 mb-3'>
                 Phù hợp cho:
@@ -226,7 +226,7 @@ export function ImageSection() {
                 {useCases.map((useCase) => (
                   <span
                     key={useCase}
-                    className='bg-white rounded-full px-3 py-1 text-sm text-foreground1 border border-border'
+                    className='bg-white rounded-full px-3 py-1 text-sm text-foreground1 border-0 border-border'
                   >
                     {useCase}
                   </span>

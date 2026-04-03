@@ -234,6 +234,16 @@ export function Link2Icon({
   return <Icon iconKey='link2' size={size} className={className} />;
 }
 
+export function CircleCheckBigIcon({
+  className,
+  size,
+}: {
+  className?: string;
+  size?: number;
+}) {
+  return <Icon iconKey='circleCheckBig' size={size} className={className} />;
+}
+
 export const ICON_COMPONENTS = {
   crown: CrownIcon,
   sparkles: SparklesIcon,

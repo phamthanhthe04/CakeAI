@@ -17,9 +17,10 @@ export default function HomePage() {
       <AIChatSection />
       <VideoSection />
       <ImageSection />
-      <MantualSection />
-      <WhySection />
       <UserSection />
+      <WhySection />
+      <MantualSection />
+
       <FaqSection />
       <ExperienceSection />
     </div>
