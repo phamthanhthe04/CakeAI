@@ -6,7 +6,7 @@
  * - Hỗ trợ next/image tối ưu
  */
 
-type ImageFormat = 'png' | 'webp' | 'jpg';
+type ImageFormat = 'png' | 'webp' | 'jpg' | 'jpeg' | 'svg';
 
 interface ImageConfig {
   path: string;
@@ -92,7 +92,7 @@ export const IMAGES = {
     400,
     'webp',
   ),
-  thumb_Illustration: img(
+  thumb_illustration: img(
     'thumb_Illustration',
     'Hình ảnh phong cách Illstration',
     400,
@@ -101,6 +101,7 @@ export const IMAGES = {
   ),
   thumb_lego: img('thumb_lego', 'Hình ảnh phong cách Lego', 400, 400, 'webp'),
   thumb_art: img('thumb_art', 'Hình ảnh phong cách Art', 400, 400, 'webp'),
+  logo: img('logo', 'Logo CakeAI', 120, 40, 'svg'),
 } as const;
 
 export type ImageKey = keyof typeof IMAGES;

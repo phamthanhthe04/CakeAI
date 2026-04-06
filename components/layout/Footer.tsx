@@ -4,6 +4,8 @@
  */
 
 import Image from 'next/image';
+import { OptimizedImage } from '@/components/ui/optimized-image';
+import { IMAGES } from '@/lib/constants/images';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -37,13 +39,7 @@ export function Footer() {
           {/* Brand Section */}
           <div>
             <div className='flex items-center gap-2 mb-4'>
-              <Image
-                src='https://app.cakeai.vn/logo.svg'
-                alt='CakeAI'
-                width={120}
-                height={40}
-                style={{ objectFit: 'contain', maxHeight: '40px' }}
-              />
+              <OptimizedImage imageKey='logo' />
             </div>
             <p className='text-muted-foreground text-sm'>
               Nền tảng AI tất cả trong một cho cá nhân và tổ chức.

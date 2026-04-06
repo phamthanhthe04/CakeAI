@@ -57,7 +57,7 @@ const styles = [
   },
   {
     name: 'Minh họa',
-    imageKey: 'thumb_Illustration' as const,
+    imageKey: 'thumb_illustration' as const,
   },
   {
     name: 'Nghệ thuật',
