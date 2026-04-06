@@ -6,7 +6,6 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
 import {
   ArrowRight,
   User,
@@ -15,7 +14,7 @@ import {
   GraduationCap,
   ShoppingBag,
 } from 'lucide-react';
-import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { ScrollReveal } from '@/components/ScrollReveal';
 
 const userTypes = [
   {
@@ -46,37 +45,32 @@ const userTypes = [
 ];
 
 export function UserSection() {
-  const { ref: containerRef, isInView } = useScrollAnimation({
-    threshold: 0.2,
-    once: true,
-  });
-
   return (
-    <section className='py-20 md:py-28 bg-[#edf2f24d]' ref={containerRef}>
-      <div className='container mx-auto px-4 max-w-7xl '>
+    <section className='py-20 md:py-28 bg-[#edf2f24d]'>
+      <div className='container mx-auto px-4 max-w-7xl'>
         {/* Header */}
-        <div
-          className='max-w-3xl mx-auto text-center mb-12 opacity-0 transition-all duration-700 ease-out'
-          style={{
-            animation: 'slideUpOnce 0.8s ease-out forwards',
-          }}
-        >
-          <span className='inline-block bg-accent/10 text-accent px-4 py-1.5 rounded-full text-sm font-medium mb-4'>
-            Đối tượng sử dụng
-          </span>
-          <h2 className='text-3xl md:text-4xl font-bold text-foreground1 mb-4'>
-            CakeAI phù hợp cho
-            <span
-              style={{
-                background: 'var(--gradient-primary)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}
-            >
-              {' '}
-              mọi người
+        <div className='max-w-3xl mx-auto text-center mb-12'>
+          <ScrollReveal delay={0}>
+            <span className='inline-block bg-accent/10 text-accent px-4 py-1.5 rounded-full text-sm font-medium mb-4'>
+              Đối tượng sử dụng
             </span>
-          </h2>
+          </ScrollReveal>
+
+          <ScrollReveal delay={100}>
+            <h2 className='text-3xl md:text-4xl font-bold text-foreground1 mb-4'>
+              CakeAI phù hợp cho
+              <span
+                style={{
+                  background: 'var(--gradient-primary)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
+                {' '}
+                mọi người
+              </span>
+            </h2>
+          </ScrollReveal>
         </div>
 
         {/* Grid */}
@@ -84,17 +78,9 @@ export function UserSection() {
           {userTypes.map((user, idx) => {
             const Icon = user.icon;
             return (
-              <div
-                key={idx}
-                className='opacity-0 transition-all duration-700 ease-out'
-                style={{
-                  animation: isInView
-                    ? `slideUpOnce 0.8s ease-out forwards ${0.15 + idx * 0.1}s`
-                    : 'none',
-                }}
-              >
+              <ScrollReveal key={idx} animation='fade-up' delay={idx * 100}>
                 <div
-                  className='group rounded-2xl border border-border p-6 transition-all duration-300 hover:shadow-lg'
+                  className='group rounded-2xl border-0 border-border p-6 transition-all duration-300 hover:[box-shadow:0_12px_40px_-8px_#00949440]'
                   style={{
                     background: 'var(--gradient-card)',
                   }}
@@ -119,24 +105,11 @@ export function UserSection() {
                     <ArrowRight className='w-5 h-5 text-accent opacity-0 group-hover:opacity-100 transition-opacity' />
                   </div>
                 </div>
-              </div>
+              </ScrollReveal>
             );
           })}
         </div>
       </div>
-
-      <style>{`
-        @keyframes slideUpOnce {
-          from {
-            opacity: 0;
-            transform: translateY(40px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
     </section>
   );
 }

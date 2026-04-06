@@ -7,6 +7,7 @@
 
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { ScrollReveal } from '@/components/ScrollReveal';
 
 const faqItems = [
   {
@@ -54,10 +55,8 @@ interface FAQItemProps {
 }
 
 function FAQItem({ question, answer, isOpen, onToggle }: FAQItemProps) {
-  const sectionVisibleStyle = { opacity: 1, transform: 'none' as const };
-
   return (
-    <div className='' style={sectionVisibleStyle}>
+    <div>
       <div className='rounded-xl bg-[#edf2f24d] border border-solid border-[#dce5e580] rounded-xl px-6 border-[#0094944d] transition-all duration-300'>
         <button
           onClick={onToggle}
@@ -83,7 +82,6 @@ function FAQItem({ question, answer, isOpen, onToggle }: FAQItemProps) {
 }
 
 export function FaqSection() {
-  const sectionVisibleStyle = { opacity: 1, transform: 'none' as const };
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
@@ -91,12 +89,13 @@ export function FaqSection() {
       <div className='container mx-auto px-4 max-w-7xl'>
         {/* Header */}
         <div className='max-w-3xl mx-auto text-center mb-12 space-y-4'>
-          <div style={sectionVisibleStyle}>
+          <ScrollReveal delay={0}>
             <span className='inline-block bg-accent/10 text-accent px-4 py-1.5 rounded-full text-sm font-medium'>
               FAQ
             </span>
-          </div>
-          <div style={sectionVisibleStyle}>
+          </ScrollReveal>
+
+          <ScrollReveal delay={100}>
             <h2 className='text-3xl md:text-4xl font-bold text-foreground1'>
               Câu hỏi
               <span
@@ -110,30 +109,36 @@ export function FaqSection() {
                 thường gặp
               </span>
             </h2>
-          </div>
-          <div style={sectionVisibleStyle}>
+          </ScrollReveal>
+
+          <ScrollReveal delay={200}>
             <p className='text-muted-foreground text-lg'>
               Giải đáp những thắc mắc phổ biến về CakeAI
             </p>
-          </div>
+          </ScrollReveal>
         </div>
 
         {/* FAQ Items */}
         <div className='max-w-3xl mx-auto'>
           <div className='space-y-4'>
             {faqItems.map((item, idx) => (
-              <FAQItem
+              <ScrollReveal
                 key={idx}
-                question={item.question}
-                answer={item.answer}
-                isOpen={openIndex === idx}
-                onToggle={() => setOpenIndex(openIndex === idx ? null : idx)}
-              />
+                animation='fade-up'
+                delay={300 + idx * 50}
+              >
+                <FAQItem
+                  question={item.question}
+                  answer={item.answer}
+                  isOpen={openIndex === idx}
+                  onToggle={() => setOpenIndex(openIndex === idx ? null : idx)}
+                />
+              </ScrollReveal>
             ))}
           </div>
 
           {/* Support Contact */}
-          <div style={sectionVisibleStyle}>
+          <ScrollReveal animation='fade-up' delay={600}>
             <div
               className='text-center mt-12 p-6 rounded-2xl border border-border'
               style={{
@@ -154,7 +159,7 @@ export function FaqSection() {
                 hoặc chat trực tiếp trên website.
               </p>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </div>
     </section>

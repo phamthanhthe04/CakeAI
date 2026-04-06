@@ -10,7 +10,7 @@
 import Image from 'next/image';
 import { Badge, IconWrapper } from '@/components';
 import { Layers, Palette, RefreshCw } from 'lucide-react';
-import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { ScrollReveal } from '@/components/ScrollReveal';
 import { ImageIcon } from '@/components';
 import { OptimizedImage } from '@/components/ui/optimized-image';
 
@@ -68,67 +68,50 @@ const styles = [
 const useCases = ['Marketing', 'Thiết kế', 'Giáo dục', 'Mạng xã hội'];
 
 export function ImageSection() {
-  const { ref: leftRef, isInView: leftInView } = useScrollAnimation({
-    threshold: 0.2,
-    once: true,
-  });
-  const { ref: rightRef, isInView: rightInView } = useScrollAnimation({
-    threshold: 0.2,
-    once: true,
-  });
-
   return (
     <section className='py-20 md:py-28'>
       <div className='container mx-auto px-4 max-w-7xl'>
         {/* Header - Slide up from bottom */}
-        <div
-          className='max-w-3xl mx-auto text-center mb-12 space-y-4 opacity-0 transition-all duration-700 ease-out'
-          style={{
-            animation: 'slideUpOnce 0.8s ease-out forwards',
-          }}
-        >
-          <Badge tone='gray' text='Image AI' />
-          <h2 className='text-3xl md:text-4xl font-bold text-foreground1'>
-            Tạo hình ảnh AI
-            <span
-              style={{
-                background: 'var(--gradient-primary)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}
-            >
-              {' '}
-              sáng tạo
-            </span>
-          </h2>
-          <p className='text-muted-foreground text-lg'>
-            Tạo hình ảnh AI chất lượng cao, từ chân thực đến sáng tạo nghệ
-            thuật, phù hợp cho cả người mới và chuyên gia.
-          </p>
+        <div className='max-w-3xl mx-auto text-center mb-12 space-y-4'>
+          <ScrollReveal delay={0}>
+            <Badge tone='gray' text='Image AI' />
+          </ScrollReveal>
+          <ScrollReveal delay={100}>
+            <h2 className='text-3xl md:text-4xl font-bold text-foreground1'>
+              Tạo hình ảnh AI
+              <span
+                style={{
+                  background: 'var(--gradient-primary)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
+                {' '}
+                sáng tạo
+              </span>
+            </h2>
+          </ScrollReveal>
+          <ScrollReveal delay={200}>
+            <p className='text-muted-foreground text-lg'>
+              Tạo hình ảnh AI chất lượng cao, từ chân thực đến sáng tạo nghệ
+              thuật, phù hợp cho cả người mới và chuyên gia.
+            </p>
+          </ScrollReveal>
         </div>
 
         {/* Main Grid */}
         <div className='grid lg:grid-cols-2 gap-8 items-start'>
           {/* Left - Image Preview - Slide from Left */}
-          <div
-            ref={leftRef}
-            className='order-2 lg:order-1 transition-all duration-1000 ease-out'
-            style={{
-              opacity: leftInView ? 1 : 0,
-              transform: leftInView ? 'translateX(0)' : 'translateX(-100px)',
-            }}
-          >
-            <div
-              className='rounded-2xl border-0 border-border p-6 overflow-hidden shadow-lg'
-              style={{ opacity: 1, transform: 'none' }}
-            >
+          <ScrollReveal animation='fade-left' delay={0}>
+            <div className='rounded-2xl border-0 border-border p-6 overflow-hidden shadow-lg'>
               {/* Main Image */}
               <div className='flex-none gap-2 mb-6'>
                 <Badge
                   text='Phong cách có sẵn'
                   textClassName='text-[#1b3232]'
                   icon={<ImageIcon className='text-accent' size={20} />}
-                  className='border-0 border-border bg-transparent px-3 py-1.5 text-sm font-medium'
+                  className='border-0 border-border bg-transparent py-1.5 text-sm font-medium'
+                  padding='none'
                 />
               </div>
 
@@ -167,88 +150,67 @@ export function ImageSection() {
                 👉 Không cần học nhiều công cụ – chỉ cần CakeAI
               </p>
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* Right - Features - Slide from Right */}
-          <div
-            ref={rightRef}
-            className='space-y-4 order-1 lg:order-2 transition-all duration-1000 ease-out'
-            style={{
-              opacity: rightInView ? 1 : 0,
-              transform: rightInView ? 'translateX(0)' : 'translateX(100px)',
-            }}
-          >
+          <div className='space-y-4'>
             {/* Feature Cards */}
             {features.map((feature, idx) => {
               const Icon = feature.icon;
               return (
-                <div
+                <ScrollReveal
                   key={idx}
-                  style={{
-                    background: 'var(--gradient-card)',
-                    opacity: rightInView ? 1 : 0,
-                    transform: rightInView
-                      ? 'translateY(0)'
-                      : 'translateY(20px)',
-                    transition: `all 0.6s ease-out ${idx * 0.1}s`,
-                  }}
-                  className='flex gap-4 rounded-xl border-0 border-border p-5 transition-all duration-300 hover:shadow-lg'
+                  animation='fade-right'
+                  delay={idx * 100}
                 >
-                  <IconWrapper size='md' variant='gradient'>
-                    <Icon className='text-white' size={24} />
-                  </IconWrapper>
-                  <div>
-                    <h3 className='text-lg font-semibold text-foreground1 mb-1'>
-                      {feature.title}
-                    </h3>
-                    <p className='text-muted-foreground text-sm'>
-                      {feature.description}
-                    </p>
+                  <div
+                    style={{
+                      background: 'var(--gradient-card)',
+                    }}
+                    className='flex gap-4 rounded-xl border-0 border-border p-5 transition-all duration-300 hover:[box-shadow:0_12px_40px_-8px_#00949440]'
+                  >
+                    <IconWrapper size='md' variant='gradient'>
+                      <Icon className='text-white' size={24} />
+                    </IconWrapper>
+                    <div>
+                      <h3 className='text-lg font-semibold text-foreground1 mb-1'>
+                        {feature.title}
+                      </h3>
+                      <p className='text-muted-foreground text-sm'>
+                        {feature.description}
+                      </p>
+                    </div>
                   </div>
-                </div>
+                </ScrollReveal>
               );
             })}
 
             {/* Use Cases */}
-            <div
-              style={{
-                background: 'hsl(var(--accent) / 0.05)',
-                opacity: rightInView ? 1 : 0,
-                transform: rightInView ? 'translateY(0)' : 'translateY(20px)',
-                transition: 'all 0.6s ease-out 0.3s',
-              }}
-              className='rounded-xl border border-solid border-[#00949433] p-5'
-            >
-              <p className='text-sm font-medium text-foreground1 mb-3'>
-                Phù hợp cho:
-              </p>
-              <div className='flex flex-wrap gap-2'>
-                {useCases.map((useCase) => (
-                  <span
-                    key={useCase}
-                    className='bg-white rounded-full px-3 py-1 text-sm text-foreground1 border-0 border-border'
-                  >
-                    {useCase}
-                  </span>
-                ))}
+            <ScrollReveal animation='fade-right' delay={features.length * 100}>
+              <div
+                style={{
+                  background: 'hsl(var(--accent) / 0.05)',
+                }}
+                className='rounded-xl border border-solid border-[#00949433] p-5'
+              >
+                <p className='text-sm font-medium text-foreground1 mb-3'>
+                  Phù hợp cho:
+                </p>
+                <div className='flex flex-wrap gap-2'>
+                  {useCases.map((useCase) => (
+                    <span
+                      key={useCase}
+                      className='bg-white rounded-full px-3 py-1 text-sm text-foreground1 border-0 border-border'
+                    >
+                      {useCase}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
+            </ScrollReveal>
           </div>
         </div>
       </div>
-
-      <style>{`
-        @keyframes slideUpOnce {
-          from {
-            opacity: 0;
-            transform: translateY(40px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
     </section>
   );
 }

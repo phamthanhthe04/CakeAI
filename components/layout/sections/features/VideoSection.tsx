@@ -9,6 +9,7 @@
 
 import { Badge, SparklesIcon, IconWrapper } from '@/components';
 import { OptimizedImage } from '@/components';
+import { ScrollReveal } from '@/components/ScrollReveal';
 import { FilmIcon, WandSparklesIcon } from 'lucide-react';
 
 const features = [
@@ -44,77 +45,85 @@ export function VideoSection() {
       <div className='container mx-auto px-4 max-w-7xl'>
         {/* Header */}
         <div className='max-w-3xl mx-auto text-center mb-12 space-y-4'>
-          <div>
+          <ScrollReveal delay={0}>
             <Badge
               tone='gray'
               text='Video AI'
               icon={<SparklesIcon className='text-accent' size={16} />}
             />
-          </div>
-          <h2 className='text-3xl md:text-4xl font-bold text-foreground1'>
-            Tạo video AI
-            <span
-              style={{
-                background: 'var(--gradient-primary)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}
-            >
-              {' '}
-              tất cả trong một
-            </span>
-          </h2>
-          <p className='text-muted-foreground text-lg'>
-            Tạo video AI nhanh chóng mà không cần kỹ năng dựng phim hay phần mềm
-            phức tạp.
-          </p>
+          </ScrollReveal>
+
+          <ScrollReveal delay={100}>
+            <h2 className='text-3xl md:text-4xl font-bold text-foreground1'>
+              Tạo video AI
+              <span
+                style={{
+                  background: 'var(--gradient-primary)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
+                {' '}
+                tất cả trong một
+              </span>
+            </h2>
+          </ScrollReveal>
+
+          <ScrollReveal delay={200}>
+            <p className='text-muted-foreground text-lg'>
+              Tạo video AI nhanh chóng mà không cần kỹ năng dựng phim hay phần
+              mềm phức tạp.
+            </p>
+          </ScrollReveal>
         </div>
 
         {/* Features Grid */}
         <div className='grid lg:grid-cols-2 gap-8 items-center'>
-          {/* Features List - Slide from Left */}
-          <div className='space-y-6 transition-all duration-1000 ease-out'>
+          {/* Features List - Fade from left */}
+          <div className='space-y-6'>
             {features.map((feature, idx) => {
               const Icon = feature.icon;
               return (
-                <div
-                  key={idx}
-                  className='flex gap-4 rounded-xl border-0 border-border/50 p-5 transition-all duration-300 hover:shadow-lg'
-                  style={{
-                    background: 'var(--gradient-card)',
-                    transition: `all 0.6s ease-out ${idx * 0.1}s`,
-                  }}
-                >
-                  <IconWrapper size='md' variant='gradient'>
-                    <Icon className='text-white' size={24} />
-                  </IconWrapper>
-                  <div>
-                    <h3 className='text-lg font-semibold text-foreground1 mb-1'>
-                      {feature.title}
-                    </h3>
-                    <p className='text-muted-foreground text-sm'>
-                      {feature.description}
-                    </p>
+                <ScrollReveal key={idx} animation='fade-left' delay={idx * 100}>
+                  <div
+                    className='flex gap-4 rounded-xl border-0 border-border/50 p-5 transition-all duration-300 hover:[box-shadow:0_12px_40px_-8px_#00949440]'
+                    style={{
+                      background: 'var(--gradient-card)',
+                    }}
+                  >
+                    <IconWrapper size='md' variant='gradient'>
+                      <Icon className='text-white' size={24} />
+                    </IconWrapper>
+                    <div>
+                      <h3 className='text-lg font-semibold text-foreground1 mb-1'>
+                        {feature.title}
+                      </h3>
+                      <p className='text-muted-foreground text-sm'>
+                        {feature.description}
+                      </p>
+                    </div>
                   </div>
-                </div>
+                </ScrollReveal>
               );
             })}
 
             {/* Effect Badges */}
-            <div className='flex flex-wrap gap-2 pt-4 transition-all duration-700 ease-out'>
-              {effectBadges.map((badge) => (
-                <Badge
-                  key={badge}
-                  text={badge}
-                  tone='gray'
-                  textClassName='text-primary'
-                />
-              ))}
-            </div>
+            <ScrollReveal animation='fade-up' delay={features.length * 100}>
+              <div className='flex flex-wrap gap-2 pt-4'>
+                {effectBadges.map((badge, idx) => (
+                  <Badge
+                    key={idx}
+                    text={badge}
+                    tone='gray'
+                    textClassName='text-primary'
+                  />
+                ))}
+              </div>
+            </ScrollReveal>
           </div>
 
-          {/* Video Preview - Slide from Right */}
-          <div className='relative transition-all duration-1000 ease-out'>
+          {/* Video Preview - Fade from right */}
+          <ScrollReveal animation='fade-right' delay={0}>
             <div
               className='rounded-2xl border-0 border-border/50 agent_shadowCard__OMD5Z overflow-hidden'
               style={{
@@ -189,7 +198,7 @@ export function VideoSection() {
                 </p>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </div>
     </section>

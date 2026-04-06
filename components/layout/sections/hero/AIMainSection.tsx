@@ -32,6 +32,7 @@ export function AIMainSection() {
             tone='gray'
             icon={<SparklesIcon className='text-accent' size={16} />}
             text='Một tài khoản - nhiều sức mạnh AI'
+            textClassName='text-foreground1'
           />
           <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold text-foreground1 leading-tight mb-6 text-center'>
             Nền tảng AI<span> </span>

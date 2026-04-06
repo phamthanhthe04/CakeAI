@@ -27,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang='en'
+      lang='en || vi'
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className='relative h-screen overflow-hidden bg-[#d9e7f1]'>
