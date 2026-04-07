@@ -1,12 +1,40 @@
 'use client';
 
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, notification } from 'antd';
 import { useState } from 'react';
 import Image from 'next/image';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { login } from '@/services';
+import type { LoginRequest } from '@/types';
 
 export default function LoginForm() {
   const [form] = Form.useForm();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
+
+  const handleSubmit = async (values: LoginRequest) => {
+    try {
+      setIsSubmitting(true);
+
+      const loginData = await login(values);
+
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('accessToken', loginData.accessToken);
+      }
+
+      router.push('/');
+    } catch {
+      notification.warning({
+        title: 'Notification',
+        description: 'Tài khoản hoặc mật khẩu không chính xác',
+        placement: 'topRight',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className='flex-1 flex justify-center items-center'>
@@ -19,13 +47,13 @@ export default function LoginForm() {
         <Form
           form={form}
           layout='vertical'
-          onFinish={(values) => console.log(values)}
+          onFinish={handleSubmit}
           className='w-full'
         >
           {/* Email */}
           <Form.Item
             name='email'
-            rules={[{ required: true, message: 'Vui lòng nhập email' }]}
+            rules={[{ required: true, message: 'Vui lòng nhập tài khoản' }]}
           >
             <Input
               placeholder='Email'
@@ -40,6 +68,7 @@ export default function LoginForm() {
               className='hover:border-accent'
               style={{
                 borderRadius: '8px',
+                padding: '6px 11px',
               }}
             />
           </Form.Item>
@@ -65,6 +94,7 @@ export default function LoginForm() {
               className='hover:border-accent transition-colors'
               style={{
                 borderRadius: '8px',
+                padding: '6px 11px',
               }}
             />
           </Form.Item>
@@ -81,6 +111,7 @@ export default function LoginForm() {
             <Button
               type='primary'
               htmlType='submit'
+              loading={isSubmitting}
               block
               style={{
                 borderRadius: 8,
@@ -117,12 +148,12 @@ export default function LoginForm() {
         {/* Register */}
         <div className='flex items-center justify-center gap-x-1 mt-3 lg:hidden'>
           <span className='italic text-sm'>Nếu bạn chưa có tài khoản?</span>
-          <a
+          <Link
             href='/register'
-            className='text-accent hover:text-accent/80 font-semibold'
+            className='hover:text-accent/80 font-semibold text-sm'
           >
             Đăng ký
-          </a>
+          </Link>
         </div>
       </div>
     </div>

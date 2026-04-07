@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-export default function RegisterBanner() {
+export default function LoginBanner() {
   return (
     <div
       className='hidden lg:flex justify-center items-center text-white relative overflow-hidden h-full'
@@ -12,22 +12,27 @@ export default function RegisterBanner() {
         backgroundPosition: 'center',
       }}
     >
-      {/* Overlay */}
-      <div className='absolute inset-0 bg-black/20' />
-
       {/* Content */}
-      <div className='relative z-10 text-center w-fit h-fit max-w-md'>
-        <h3 className='text-2xl font-medium mb-4'>Bắt đầu ngay</h3>
+      <div className='relative z-10 w-fit h-fit max-w-md'>
+        <h3 className='text-2xl font-medium mb-4'>Xin chào</h3>
 
-        <div className='mt-2 mb-6'>
-          <p className='mb-2'>
-            Tham gia hàng triệu người dùng đang sử dụng CakeAI để tăng năng suất
-            và sáng tạo
+        <div className='mt-2 mb-1'>
+          <p
+            className='mb-1 text-sm'
+            style={{
+              marginBottom: '4px',
+            }}
+          >
+            Chúng tôi rất vui mừng chào đón bạn đến với{' '}
+            <span className='font-medium'>CakeAI Chat</span>
+          </p>
+          <p className='mb-1 text-sm'>
+            Đây là công cụ AI tốt nhất dành cho bạn
           </p>
         </div>
 
-        <div className='italic underline underline-offset-4 mb-6'>
-          Đã có tài khoản?
+        <div className='italic underline underline-offset-4 mb-6 text-sm'>
+          Nếu bạn đã có tài khoản?
         </div>
 
         <div className='flex justify-end'>

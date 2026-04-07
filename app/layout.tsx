@@ -1,11 +1,16 @@
 import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
 import { siteConfig } from '@/lib/constants/site';
-import { Inter } from 'next/font/google';
 import './globals.css';
 
-const inter = Inter({
+const geistSans = Geist({
+  variable: '--font-geist-sans',
   subsets: ['latin'],
-  variable: '--font-inter',
+});
+
+const geistMono = Geist_Mono({
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
@@ -19,20 +24,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='vi' className={`${inter.variable} h-full antialiased`}>
-      <body className='relative min-h-screen font-sans text-foreground1'>
-        <div className='pointer-events-none fixed inset-0 z-0' />
-        <div
-          className='absolute w-full -z-10 inset-0 top-0'
-          style={{
-            maxHeight: '400px',
-            height: '400px',
-            background:
-              'linear-gradient(180deg, rgba(1, 157, 138, 0.25) 0%, rgba(5, 118, 203, 0.15) 40%, rgba(5, 118, 203, 0) 100%)',
-          }}
-        />
-        <div className='relative z-20'>{children}</div>
-      </body>
+    <html
+      lang='en'
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+    >
+      <body className='h-full'>{children}</body>
     </html>
   );
 }
