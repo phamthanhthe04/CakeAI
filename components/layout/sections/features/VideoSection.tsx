@@ -46,11 +46,7 @@ export function VideoSection() {
         {/* Header */}
         <div className='max-w-3xl mx-auto text-center mb-12 space-y-4'>
           <ScrollReveal delay={0}>
-            <Badge
-              tone='gray'
-              text='Video AI'
-              icon={<SparklesIcon className='text-accent' size={16} />}
-            />
+            <Badge tone='gray' text='Video AI' />
           </ScrollReveal>
 
           <ScrollReveal delay={100}>
@@ -131,12 +127,7 @@ export function VideoSection() {
               }}
             >
               {/* Image Container with aspect ratio */}
-              <div
-                className='relative w-full overflow-hidden'
-                style={{
-                  aspectRatio: '16/9',
-                }}
-              >
+              <div className='relative w-full overflow-hidden aspect-video'>
                 <OptimizedImage
                   imageKey='video'
                   className='w-full h-full object-cover'

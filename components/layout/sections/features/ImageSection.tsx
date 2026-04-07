@@ -70,7 +70,7 @@ const useCases = ['Marketing', 'Thiết kế', 'Giáo dục', 'Mạng xã hội'
 export function ImageSection() {
   return (
     <section className='py-20 md:py-28'>
-      <div className='container mx-auto px-4 max-w-7xl'>
+      <div className='px-4 mx-auto w-full max-w-[1400px]'>
         {/* Header - Slide up from bottom */}
         <div className='max-w-3xl mx-auto text-center mb-12 space-y-4'>
           <ScrollReveal delay={0}>
@@ -115,14 +115,16 @@ export function ImageSection() {
                 />
               </div>
 
-              <div className='mb-6 aspect-square relative rounded-xl overflow-hidden'>
+              {/* Container bao quanh Image */}
+              <div className='mb-6 relative rounded-xl overflow-hidden w-full'>
+                {/* Đã xóa aspect-square ở trên */}
                 <Image
                   src='/images/images/ai-image-DEVXHCxY.webp'
                   alt='AI Image Generation'
                   width={618}
                   height={618}
-                  className='w-full h-full object-cover'
-                  priority
+                  // Sửa class ở đây
+                  className='w-full h-[618px]'
                 />
               </div>
 

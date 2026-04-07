@@ -6,6 +6,7 @@
 
 'use client';
 
+import { useRouter } from 'next/navigation';
 import {
   Badge,
   SparklesIcon,
@@ -14,6 +15,7 @@ import {
   BaseButton,
   ArrowRightIcon,
   FeatureItem,
+  IconWrapper,
 } from '@/components';
 
 const featureHighlights = [
@@ -23,8 +25,14 @@ const featureHighlights = [
 ];
 
 export function AIMainSection() {
+  const router = useRouter();
+
+  const handleTryFree = () => {
+    router.push('/login');
+  };
+
   return (
-    <section className='py-20 md:py-28'>
+    <section className='pt-20'>
       <div className='container mx-auto px-4 max-w-7xl'>
         {/* Header */}
         <div className='mx-auto text-center mb-12 space-y-4'>
@@ -56,21 +64,23 @@ export function AIMainSection() {
         </div>
 
         {/* CTA Buttons */}
-        <div className='flex justify-center gap-4 mb-12'>
+        <div className='flex flex-wrap justify-center gap-4 mb-12'>
           <BaseButton
             text='Trải nghiệm miễn phí'
             size='xl'
+            className='hover:scale-105 active:scale-100'
             textClassName='text-white text-xl'
             iconPosition='right'
             style={{ background: 'var(--gradient-primary)', border: 'none' }}
             icon={<ArrowRightIcon className='text-white' size={16} />}
+            onClick={handleTryFree}
           />
           <BaseButton
             text='Xem demo'
             variant='outline'
             size='xl'
-            className='agent_button'
-            textClassName='text-foreground1 text-xl'
+            className='agent_button hover:border-accent'
+            textClassName='text-foreground1 group-hover:text-accent text-xl'
           />
         </div>
 
@@ -82,6 +92,7 @@ export function AIMainSection() {
               <Badge
                 key={idx}
                 tone='soft'
+                className='hover:[box-shadow:0_12px_40px_-8px_#00949440] cursor-pointer'
                 text={feature.text}
                 textClassName='text-foreground1'
                 icon={<Icon className='text-accent' size={20} />}
@@ -116,39 +127,51 @@ export function AIMainSection() {
             <div className='p-6 md:p-10'>
               <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
                 {/* AI Chat Feature */}
-                <div className='rounded-2xl border border-[hsl(var(--border)/0.5)] bg-white/45 p-5'>
+                <div className='rounded-xl border-0 border-border/30 bg-muted/30 p-5'>
                   <FeatureItem
                     title='AI Chat'
-                    icon={<BotIcon className='text-accent' size={18} />}
+                    icon={
+                      <IconWrapper size='sm' variant='gradient'>
+                        <BotIcon className='text-white' size={16} />
+                      </IconWrapper>
+                    }
                   />
-                  <div className='space-y-3'>
-                    <p className='mt-6 text-[14px] leading-relaxed text-muted-foreground'>
+                  <div className='space-y-3 '>
+                    <p className='mt-6 text-[14px] leading-relaxed text-muted-foreground p-3'>
                       Xin chào! Tôi có thể giúp gì cho bạn?
                     </p>
-                    <div className='bg-primary/10 rounded-lg p-3 text-sm text-foreground1 ml-4'>
+                    <div className='bg-primary/10 rounded-lg p-3 text-sm text-foreground1 ml-4 mt-3'>
                       Phân tích báo cáo doanh thu Q4
                     </div>
                   </div>
                 </div>
 
                 {/* Image AI Feature */}
-                <div className='rounded-2xl border border-[hsl(var(--border)/0.5)] bg-white/45 p-5'>
+                <div className='rounded-2xl border-0 border-border/30 bg-muted/30 p-5'>
                   <FeatureItem
                     title='Image AI'
-                    icon={<SparklesIcon className='text-accent' size={18} />}
+                    icon={
+                      <IconWrapper size='sm' variant='gradient'>
+                        <SparklesIcon className='text-white' size={16} />
+                      </IconWrapper>
+                    }
                   />
-                  <div className='mt-6 flex h-52.5 items-center justify-center rounded-2xl bg-[#b9d8d8]'>
-                    <div className='h-16 w-16 rounded-full bg-accent shadow-[0_0_24px_hsl(var(--accent)/0.45)]'></div>
+                  <div className='mt-6 flex aspect-video items-center justify-center rounded-lg bg-linear-to-br from-primary/20 to-accent/20'>
+                    <div className='h-12 w-12 rounded-full bg-accent shadow-[0_0_24px_hsl(var(--accent)/0.45)]'></div>
                   </div>
                 </div>
 
                 {/* AI Agent Feature */}
-                <div className='rounded-2xl border border-[hsl(var(--border)/0.5)] bg-white/45 p-5'>
+                <div className='rounded-2xl border-0 border-border/30 bg-muted/30 p-5'>
                   <FeatureItem
                     title='AI Agent'
-                    icon={<ZapIcon className='text-accent' size={18} />}
+                    icon={
+                      <IconWrapper size='sm' variant='gradient'>
+                        <ZapIcon className='text-white' size={16} />
+                      </IconWrapper>
+                    }
                   />
-                  <div className='space-y-2'>
+                  <div className='space-y-2 mt-6'>
                     <div className='flex items-center gap-2'>
                       <div className='w-2 h-2 rounded-full bg-primary'></div>
                       <span className='text-sm text-muted-foreground'>

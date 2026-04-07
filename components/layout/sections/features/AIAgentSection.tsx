@@ -109,11 +109,14 @@ export function AIAgentSection() {
                 >
                   <FeatureCard
                     icon={
-                      <IconWrapper variant='gradient'>
-                        <Icon className='text-white' size={24} />
+                      <IconWrapper
+                        variant='gradient'
+                        className='group-hover:scale-110 transition-transform duration-300'
+                      >
+                        <Icon className='text-white ' size={24} />
                       </IconWrapper>
                     }
-                    className='duration-300 hover:hover:-translate-y-1 hover:[box-shadow:0_12px_40px_-8px_#00949440]'
+                    className='group-hover:scale-110 hover:-translate-y-1 hover:[box-shadow:0_12px_40px_-8px_#00949440]'
                     title={feature.title}
                     description={feature.description}
                   />
@@ -126,7 +129,7 @@ export function AIAgentSection() {
         {/* Use Cases - Fade up */}
         <ScrollReveal animation='fade-up' delay={0}>
           <div
-            className='rounded-2xl border-0 border-border p-8 hover:[box-shadow:0_12px_40px_-8px_#00949440]'
+            className='rounded-2xl border-0 border-border p-8 box-shadow-card hover:shadow-lg transition-shadow duration-300'
             style={{
               background: 'var(--gradient-card)',
             }}

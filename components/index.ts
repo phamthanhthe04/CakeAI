@@ -3,6 +3,7 @@ export * from './layout/Header';
 export * from './layout/Footer';
 export * from './ui/badge';
 export * from './ui/button';
+export * from './ui/base-input';
 export * from './ui/feature-card';
 export * from './ui/feature-item';
 export * from './ui/icon';

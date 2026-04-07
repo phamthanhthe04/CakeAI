@@ -33,7 +33,7 @@ const steps = [
 export function ManualSection() {
   return (
     <section className='py-20 bg-[#edf2f24d]'>
-      <div className='container mx-auto px-4 max-w-7xl'>
+      <div className='px-4 mx-auto w-full max-w-[1400px]'>
         {/* Header - Slide up from bottom */}
         <div className='max-w-3xl mx-auto text-center mb-12 space-y-4'>
           <ScrollReveal delay={0}>
@@ -72,14 +72,11 @@ export function ManualSection() {
         <div className='grid lg:grid-cols-2 gap-12 items-center'>
           {/* Left - Video Preview */}
           <ScrollReveal animation='fade-left' delay={0}>
-            <div className='relative rounded-2xl overflow-hidden aspect-video border-0 border-border'>
+            <div className='relative rounded-2xl overflow-hidden aspect-video border-0 border-border bg-[#1c4a4a]'>
               <div className='absolute inset-0 flex items-center justify-center bg-[linear-gradient(to_bottom_right,#00949433,#0094940D)]'>
                 <button
                   type='button'
-                  className='w-20 h-20 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 '
-                  style={{
-                    background: 'var(--gradient-primary)',
-                  }}
+                  className='w-20 h-20 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 bg-[#0b7676]'
                 >
                   <Play className='w-8 h-8 text-white fill-white ml-1' />
                 </button>
@@ -115,7 +112,7 @@ export function ManualSection() {
                       {step.number}
                     </span>
                   </div>
-                  <p className='text-foreground1 font-medium flex-1'>
+                  <p className='text-foreground1 font-medium flex-1 text-sm'>
                     {step.title}
                   </p>
                   <CircleCheckBigIcon className='w-5 h-5 text-accent' />

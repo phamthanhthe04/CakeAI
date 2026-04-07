@@ -19,12 +19,14 @@ import {
   FileTextIcon,
   Link2Icon,
   IconWrapper,
+  Layers3Icon,
+  GlobeIcon,
 } from '@/components';
 import { ScrollReveal } from '../../../ScrollReveal';
 
 const features = [
   {
-    icon: BrainIcon,
+    icon: Layers3Icon,
     title: 'Tích hợp nhiều mô hình AI hàng đầu',
     description:
       'Sử dụng linh hoạt nhiều mô hình AI tiên tiến trong cùng một nền tảng, được cập nhật liên tục.',
@@ -34,7 +36,7 @@ const features = [
     ],
   },
   {
-    icon: MessageSquareIcon,
+    icon: GlobeIcon,
     title: 'Ghi nhớ thông tin làm việc',
     description:
       'Lưu trữ và học hỏi từ các cuộc trò chuyện trước để phục vụ bạn tốt hơn.',
@@ -44,7 +46,7 @@ const features = [
     ],
   },
   {
-    icon: WorkflowIcon,
+    icon: GlobeIcon,
     title: 'Thực hiện theo quy trình',
     description:
       'Không chỉ trả lời câu hỏi mà còn thực hiện công việc theo quy trình được định sẵn.',
@@ -154,7 +156,8 @@ export function AIChatSection() {
                     text={input.text}
                     tone='teal'
                     textClassName='text-white'
-                    className='flex flex-col bg-white/10 rounded-lg px-4 py-3'
+                    padding='lg'
+                    className='flex flex-col bg-white/10 rounded-lg hover:bg-white/15 transition-colors min-w-[140px]'
                     icon={
                       <IconWrapper size='lg' variant='gradient'>
                         <Icon className='text-white' size={24} />

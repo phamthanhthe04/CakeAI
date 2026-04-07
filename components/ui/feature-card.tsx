@@ -30,7 +30,7 @@ export function FeatureCard({
   return (
     <div
       className={cn(
-        'rounded-xl border border-[#e7eff3] bg-white p-6 shadow-sm',
+        'group rounded-xl border border-[#e7eff3] bg-white p-6 shadow-sm transition-all duration-300',
         className,
       )}
     >
@@ -49,6 +49,7 @@ export function FeatureCard({
               text={badge.text}
               icon={badge.icon}
               tone='soft'
+              textClassName='text-foreground1 text-sm'
               className={badge.className}
               padding={badge.padding}
             />

@@ -1,11 +1,11 @@
 /**
  * FAQ Component
  * Frequently asked questions section with expandable items
+ * Uses native HTML <details> element (CSS-only, no JavaScript state)
  */
 
 'use client';
 
-import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { ScrollReveal } from '@/components/ScrollReveal';
 
@@ -47,43 +47,7 @@ const faqItems = [
   },
 ];
 
-interface FAQItemProps {
-  question: string;
-  answer: string;
-  isOpen: boolean;
-  onToggle: () => void;
-}
-
-function FAQItem({ question, answer, isOpen, onToggle }: FAQItemProps) {
-  return (
-    <div>
-      <div className='rounded-xl bg-[#edf2f24d] border border-solid border-[#dce5e580] rounded-xl px-6 border-[#0094944d] transition-all duration-300'>
-        <button
-          onClick={onToggle}
-          className='w-full flex items-center justify-between text-left font-semibold text-foreground1 hover:text-accent transition-colors py-5 px-6'
-        >
-          <span>{question}</span>
-          <ChevronDown
-            className={`h-4 w-4 shrink-0 transition-transform duration-200 ${
-              isOpen ? 'rotate-180' : ''
-            }`}
-          />
-        </button>
-        {isOpen && (
-          <div className='overflow-hidden text-sm transition-all duration-300 ease-in-out'>
-            <div className='text-muted-foreground pb-5 px-6 leading-relaxed'>
-              {answer}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
 export function FaqSection() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-
   return (
     <section className='py-20 bg-[#f9fbfb]'>
       <div className='container mx-auto px-4 max-w-7xl'>
@@ -127,12 +91,15 @@ export function FaqSection() {
                 animation='fade-up'
                 delay={300 + idx * 50}
               >
-                <FAQItem
-                  question={item.question}
-                  answer={item.answer}
-                  isOpen={openIndex === idx}
-                  onToggle={() => setOpenIndex(openIndex === idx ? null : idx)}
-                />
+                <details className='group rounded-xl bg-[#edf2f24d] border border-[#0094944d] transition-all duration-300 hover:border-[#00949480]'>
+                  <summary className='flex items-center justify-between cursor-pointer text-left font-semibold text-foreground1 py-5 px-6 hover:text-accent transition-colors'>
+                    <span>{item.question}</span>
+                    <ChevronDown className='h-4 w-4 shrink-0 transition-transform duration-300 group-open:rotate-180' />
+                  </summary>
+                  <div className='text-sm text-muted-foreground px-6 pb-5 leading-relaxed'>
+                    {item.answer}
+                  </div>
+                </details>
               </ScrollReveal>
             ))}
           </div>
@@ -140,19 +107,19 @@ export function FaqSection() {
           {/* Support Contact */}
           <ScrollReveal animation='fade-up' delay={600}>
             <div
-              className='text-center mt-12 p-6 rounded-2xl border border-border'
+              className='text-center mt-12 p-6 rounded-2xl border border-solid border-[#00949433]'
               style={{
                 background: 'hsl(var(--accent) / 0.05)',
               }}
             >
-              <p className='text-foreground1 font-medium mb-2'>
+              <p className='text-foreground1 font-medium mb-2 text-sm'>
                 Không tìm thấy câu trả lời bạn cần?
               </p>
-              <p className='text-muted-foreground'>
+              <p className='text-muted-foreground text-sm'>
                 Liên hệ đội ngũ hỗ trợ của chúng tôi qua{' '}
                 <a
                   href='mailto:support@cakeai.vn'
-                  className='text-accent hover:underline'
+                  className='text-accent hover:underline text-sm'
                 >
                   support@cakeai.vn
                 </a>{' '}
@@ -162,6 +129,30 @@ export function FaqSection() {
           </ScrollReveal>
         </div>
       </div>
+
+      <style>{`
+        details {
+          overflow: hidden;
+        }
+
+        details[open] {
+          border-color: hsl(var(--accent) / 0.3);
+        }
+
+        details[open] summary {
+          color: hsl(var(--accent));
+        }
+
+        summary::-webkit-details-marker {
+          display: none;
+        }
+
+        summary {
+          list-style: none;
+          -webkit-user-select: none;
+          user-select: none;
+        }
+      `}</style>
     </section>
   );
 }

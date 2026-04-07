@@ -47,7 +47,7 @@ const userTypes = [
 export function UserSection() {
   return (
     <section className='py-20 md:py-28 bg-[#edf2f24d]'>
-      <div className='container mx-auto px-4 max-w-7xl'>
+      <div className='px-4 mx-auto w-full max-w-[1400px]'>
         {/* Header */}
         <div className='max-w-3xl mx-auto text-center mb-12'>
           <ScrollReveal delay={0}>

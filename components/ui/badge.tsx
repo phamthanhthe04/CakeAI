@@ -9,7 +9,7 @@ type BadgeProps = {
   className?: string;
   textClassName?: string;
   iconClassName?: string;
-  padding?: 'default' | 'none';
+  padding?: 'none' | 'default' | 'sm' | 'md' | 'lg';
 };
 
 const toneClassMap: Record<NonNullable<BadgeProps['tone']>, string> = {
@@ -28,7 +28,13 @@ export function Badge({
   iconClassName,
   padding = 'default',
 }: BadgeProps) {
-  const paddingClass = padding === 'none' ? 'px-0 py-0' : 'px-4 py-2';
+  const paddingClass = {
+    none: 'px-0 py-0',
+    default: 'px-4 py-2',
+    sm: 'px-3 py-1.5',
+    md: 'px-4 py-3',
+    lg: 'p-6',
+  }[padding];
 
   return (
     <div

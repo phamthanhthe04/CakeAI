@@ -20,6 +20,7 @@ interface OptimizedImageProps {
   fill?: boolean;
   maxWidth?: string;
   maxHeight?: string;
+  rounded?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 }
 
 export function OptimizedImage({
@@ -29,8 +30,18 @@ export function OptimizedImage({
   fill,
   maxWidth,
   maxHeight,
+  rounded = '2xl',
 }: OptimizedImageProps) {
   const image = IMAGES[imageKey];
+
+  const roundedClass = {
+    none: '',
+    sm: 'rounded-sm',
+    md: 'rounded-md',
+    lg: 'rounded-lg',
+    xl: 'rounded-xl',
+    '2xl': 'rounded-2xl',
+  }[rounded];
 
   return (
     <div
@@ -48,7 +59,8 @@ export function OptimizedImage({
         priority={image.priority}
         fill={fill}
         className={cn(
-          'rounded-2xl agent_shadowCard__OMD5Z',
+          'agent_shadowCard__OMD5Z',
+          roundedClass,
           !fill && 'w-full h-full',
           className,
         )}

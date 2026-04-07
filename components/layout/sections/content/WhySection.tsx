@@ -90,7 +90,7 @@ export function WhySection() {
                   animation={idx % 2 === 0 ? 'fade-left' : 'fade-right'}
                   delay={idx * 100}
                 >
-                  <div className='flex items-start gap-4 rounded-xl border-0 border-border p-5 transition-all duration-300 hover:[box-shadow:0_12px_40px_-8px_#00949440]'>
+                  <div className='flex items-start gap-4 rounded-xl border border-solid border-[#dce5e580] p-5 shadow-white transition-all duration-300 hover:[box-shadow:0_12px_40px_-8px_#00949440]'>
                     <div className='w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center shrink-0'>
                       <Icon className='w-5 h-5 text-accent' />
                     </div>

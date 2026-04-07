@@ -30,7 +30,7 @@ type LinkModeProps = BaseStyleProps &
 export type BaseButtonProps = ButtonModeProps | LinkModeProps;
 
 const baseClassName =
-  'inline-flex items-center justify-center gap-2 rounded-2xl border text-xs font-semibold leading-4 select-none transition-colors';
+  'cursor-pointer group inline-flex items-center justify-center gap-2 rounded-2xl border text-xs font-semibold leading-4 select-none transition-all duration-300';
 
 const variantClassMap: Record<
   NonNullable<BaseButtonProps['variant']>,
@@ -81,7 +81,12 @@ export function BaseButton({
   ) : null;
 
   const textEl = (
-    <span className={cn('font-semibold leading-4 select-none', textClassName)}>
+    <span
+      className={cn(
+        'font-semibold leading-4 select-none whitespace-nowrap',
+        textClassName,
+      )}
+    >
       {text}
     </span>
   );
