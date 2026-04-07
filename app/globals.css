@@ -1,9 +1,14 @@
 @import 'tailwindcss';
+@import 'antd/dist/reset.css';
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-inter, sans-serif);
 }
 
 body {
@@ -43,31 +48,21 @@ body {
     hsl(180, 15%, 98%)
   );
 }
-@font-face {
-  font-family: Inter;
-  font-style: normal;
-  font-weight: 100;
-  font-display: swap;
-  src: url(/_next/static/media/ba9851c3c22cd980-s.woff2) format('woff2');
-  unicode-range:
-    u + 0460 -052f,
-    u + 1c80 -1c8a,
-    u + 20b4,
-    u + 2de0 -2dff,
-    u + a640-a69f,
-    u + fe2e-fe2f;
+@theme {
+  --font-sans: var(--font-inter);
 }
 @theme inline {
   --color-white: hsl(var(--white));
-  --color-accent: hsl(var(--accent));
+  --color-accent: hsl(var(--accent)) !important;
   --color-destructive: hsl(var(--destructive));
   --color-muted-foreground: hsl(var(--muted-foreground));
   --color-foreground1: hsl(var(--foreground1));
   --color-muted: hsl(var(--muted));
-  --color-primary: hsl(var(--primary));
+  --color-primary: hsl(var(--primary)) !important;
   --color-secondary: hsl(var(--secondary));
   --color-background1: hsl(var(--background1));
 }
+
 .shadow-card {
   box-shadow: var(--shadow-card);
   cursor: pointer;
@@ -83,10 +78,68 @@ body {
   .bg-gradient-primary {
     background-color: var(--gradient-primary);
   }
+  .box-shadow-card {
+    box-shadow: var(--shadow-card);
+  }
   .agent_button {
     border: 2px solid hsl(var(--foreground1) / 0.2);
     transition:
       border-color 0.3s ease,
       color 0.3s ease;
+  }
+
+  /* Ant Design Input Hover */
+  .ant-input:hover,
+  .ant-input-number:hover,
+  .ant-input-affix-wrapper:hover {
+    border-color: hsl(var(--accent)) !important;
+  }
+
+  /* Ant Design Input Focus */
+  .ant-input-number:focus,
+  .ant-input-affix-wrapper:has(.ant-input:focus) {
+    border-color: hsl(var(--accent)) !important;
+    box-shadow: 0 0 0 2px hsl(var(--accent) / 0.2) !important;
+  }
+
+  /* Ant Design Input Password Hover */
+  .ant-input-password:hover .ant-input,
+  .ant-input-password .ant-input:hover {
+    border-color: hsl(var(--accent)) !important;
+  }
+
+  /* Ant Design Input Password Focus */
+  .ant-input-password:focus {
+    border-color: hsl(var(--accent)) !important;
+    box-shadow: 0 0 0 2px hsl(var(--accent) / 0.2) !important;
+  }
+
+  /* Forgot Password Link */
+  .forgot-password-link {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .forgot-password-link a {
+    color: hsl(var(--primary)) !important;
+    transition: color 0.3s ease;
+  }
+
+  .forgot-password-link a:hover {
+    color: hsl(var(--accent) / 0.8) !important;
+  }
+
+  /* Form centered */
+  .ant-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .ant-form-item {
+    width: 100%;
+    margin-bottom: 16px;
   }
 }

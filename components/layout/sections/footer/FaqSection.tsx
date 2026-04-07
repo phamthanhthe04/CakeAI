@@ -1,12 +1,13 @@
 /**
  * FAQ Component
  * Frequently asked questions section with expandable items
+ * Uses native HTML <details> element (CSS-only, no JavaScript state)
  */
 
 'use client';
 
-import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { ScrollReveal } from '@/components/ScrollReveal';
 
 const faqItems = [
   {
@@ -46,62 +47,19 @@ const faqItems = [
   },
 ];
 
-interface FAQItemProps {
-  question: string;
-  answer: string;
-  isOpen: boolean;
-  onToggle: () => void;
-}
-
-function FAQItem({ question, answer, isOpen, onToggle }: FAQItemProps) {
-  const sectionVisibleStyle = { opacity: 1, transform: 'none' as const };
-
-  return (
-    <div style={sectionVisibleStyle}>
-      <div
-        className='rounded-xl border border-border transition-all duration-300'
-        style={{
-          background: 'var(--gradient-card)',
-        }}
-      >
-        <button
-          onClick={onToggle}
-          className='w-full flex items-center justify-between text-left font-semibold text-foreground1 hover:text-accent transition-colors py-5 px-6'
-        >
-          <span>{question}</span>
-          <ChevronDown
-            className={`h-4 w-4 shrink-0 transition-transform duration-200 ${
-              isOpen ? 'rotate-180' : ''
-            }`}
-          />
-        </button>
-        {isOpen && (
-          <div className='overflow-hidden text-sm transition-all duration-300 ease-in-out'>
-            <div className='text-muted-foreground pb-5 px-6 leading-relaxed'>
-              {answer}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
 export function FaqSection() {
-  const sectionVisibleStyle = { opacity: 1, transform: 'none' as const };
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-
   return (
-    <section className='py-20 bg-secondary/5'>
+    <section className='py-20 bg-[#f9fbfb]'>
       <div className='container mx-auto px-4 max-w-7xl'>
         {/* Header */}
         <div className='max-w-3xl mx-auto text-center mb-12 space-y-4'>
-          <div style={sectionVisibleStyle}>
+          <ScrollReveal delay={0}>
             <span className='inline-block bg-accent/10 text-accent px-4 py-1.5 rounded-full text-sm font-medium'>
               FAQ
             </span>
-          </div>
-          <div style={sectionVisibleStyle}>
+          </ScrollReveal>
+
+          <ScrollReveal delay={100}>
             <h2 className='text-3xl md:text-4xl font-bold text-foreground1'>
               Câu hỏi
               <span
@@ -115,53 +73,86 @@ export function FaqSection() {
                 thường gặp
               </span>
             </h2>
-          </div>
-          <div style={sectionVisibleStyle}>
+          </ScrollReveal>
+
+          <ScrollReveal delay={200}>
             <p className='text-muted-foreground text-lg'>
               Giải đáp những thắc mắc phổ biến về CakeAI
             </p>
-          </div>
+          </ScrollReveal>
         </div>
 
         {/* FAQ Items */}
         <div className='max-w-3xl mx-auto'>
           <div className='space-y-4'>
             {faqItems.map((item, idx) => (
-              <FAQItem
+              <ScrollReveal
                 key={idx}
-                question={item.question}
-                answer={item.answer}
-                isOpen={openIndex === idx}
-                onToggle={() => setOpenIndex(openIndex === idx ? null : idx)}
-              />
+                animation='fade-up'
+                delay={300 + idx * 50}
+              >
+                <details className='group rounded-xl bg-[#edf2f24d] border border-[#0094944d] transition-all duration-300 hover:border-[#00949480]'>
+                  <summary className='flex items-center justify-between cursor-pointer text-left font-semibold text-foreground1 py-5 px-6 hover:text-accent transition-colors'>
+                    <span>{item.question}</span>
+                    <ChevronDown className='h-4 w-4 shrink-0 transition-transform duration-300 group-open:rotate-180' />
+                  </summary>
+                  <div className='text-sm text-muted-foreground px-6 pb-5 leading-relaxed'>
+                    {item.answer}
+                  </div>
+                </details>
+              </ScrollReveal>
             ))}
           </div>
 
           {/* Support Contact */}
-          <div style={sectionVisibleStyle}>
+          <ScrollReveal animation='fade-up' delay={600}>
             <div
-              className='text-center mt-12 p-6 rounded-2xl border border-border'
+              className='text-center mt-12 p-6 rounded-2xl border border-solid border-[#00949433]'
               style={{
                 background: 'hsl(var(--accent) / 0.05)',
               }}
             >
-              <p className='text-foreground1 font-medium mb-2'>
+              <p className='text-foreground1 font-medium mb-2 text-sm'>
                 Không tìm thấy câu trả lời bạn cần?
               </p>
-              <p className='text-muted-foreground'>
+              <p className='text-muted-foreground text-sm'>
                 Liên hệ đội ngũ hỗ trợ của chúng tôi qua{' '}
                 <a
                   href='mailto:support@cakeai.vn'
-                  className='text-accent hover:underline'
+                  className='text-accent hover:underline text-sm'
                 >
                   support@cakeai.vn
                 </a>{' '}
                 hoặc chat trực tiếp trên website.
               </p>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </div>
+
+      <style>{`
+        details {
+          overflow: hidden;
+        }
+
+        details[open] {
+          border-color: hsl(var(--accent) / 0.3);
+        }
+
+        details[open] summary {
+          color: hsl(var(--accent));
+        }
+
+        summary::-webkit-details-marker {
+          display: none;
+        }
+
+        summary {
+          list-style: none;
+          -webkit-user-select: none;
+          user-select: none;
+        }
+      `}</style>
     </section>
   );
 }

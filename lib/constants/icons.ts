@@ -3,7 +3,7 @@
  * Quản lý toàn bộ icon từ một nơi, type-safe
  */
 
-import type { LucideIcon } from 'lucide-react';
+import { LucideCircleCheckBig, type LucideIcon } from 'lucide-react';
 import {
   ArrowRight,
   Bot,
@@ -23,6 +23,7 @@ import {
   Image,
   FileText,
   Link2,
+  CircleCheckBig,
 } from 'lucide-react';
 
 interface IconConfig {
@@ -67,6 +68,7 @@ export const ICONS = {
   image: createIcon(Image, 16, 2),
   fileText: createIcon(FileText, 16, 2),
   link2: createIcon(Link2, 16, 2),
+  circleCheckBig: createIcon(CircleCheckBig, 24, 2.5),
 } as const;
 
 export type IconKey = keyof typeof ICONS;

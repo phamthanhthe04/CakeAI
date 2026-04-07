@@ -3,8 +3,11 @@
  * Call-to-action section with feature highlights
  */
 
+'use client';
+
 import { Zap, TrendingUp, Sparkles, ArrowRight } from 'lucide-react';
 import { BaseButton } from '@/components/ui/button';
+import { ScrollReveal } from '@/components/ScrollReveal';
 
 const features = [
   { icon: Zap, text: 'Tối ưu công việc' },
@@ -13,10 +16,8 @@ const features = [
 ];
 
 export function ExperienceSection() {
-  const sectionVisibleStyle = { opacity: 1, transform: 'none' as const };
-
   return (
-    <section className='py-20 md:py-28 relative overflow-hidden'>
+    <section className='relative overflow-hidden'>
       {/* Background Gradients */}
       <div className='absolute inset-0 overflow-hidden'>
         <div
@@ -41,34 +42,34 @@ export function ExperienceSection() {
       >
         <div className='max-w-3xl mx-auto text-center'>
           {/* Badge */}
-          <div style={sectionVisibleStyle}>
+          <ScrollReveal delay={0}>
             <span className='inline-block bg-white/20 text-white px-4 py-1.5 rounded-full text-sm font-medium mb-6 backdrop-blur-sm'>
               Sẵn sàng trải nghiệm
             </span>
-          </div>
+          </ScrollReveal>
 
           {/* Heading */}
-          <div style={sectionVisibleStyle}>
+          <ScrollReveal delay={100}>
             <h2 className='text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6'>
               Bắt đầu sử dụng CakeAI ngay hôm nay
             </h2>
-          </div>
+          </ScrollReveal>
 
           {/* Subheading */}
-          <div style={sectionVisibleStyle}>
+          <ScrollReveal delay={200}>
             <p className='text-lg text-white/80 mb-8'>
               CakeAI – AI làm việc cùng bạn, mỗi ngày.
             </p>
-          </div>
+          </ScrollReveal>
 
           {/* Features */}
-          <div style={sectionVisibleStyle}>
+          <ScrollReveal delay={300}>
             <div className='flex flex-wrap items-center justify-center gap-6 mb-10'>
               {features.map((feature, idx) => {
                 const Icon = feature.icon;
                 return (
                   <div key={idx} className='flex items-center gap-2'>
-                    <div className='w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center backdrop-blur-sm'>
+                    <div className='w-8 h-8 rounded-lg bg-[#00949433] flex items-center justify-center backdrop-blur-sm'>
                       <Icon className='w-4 h-4 text-white' />
                     </div>
                     <span className='text-white font-medium'>
@@ -78,30 +79,31 @@ export function ExperienceSection() {
                 );
               })}
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* CTA Buttons */}
-          <div style={sectionVisibleStyle}>
+          <ScrollReveal delay={400}>
             <div className='flex flex-col sm:flex-row items-center justify-center gap-4'>
               <BaseButton
                 text='Trải nghiệm miễn phí'
                 size='xl'
                 textClassName='text-white text-lg'
-                className='bg-white text-accent hover:bg-white/90'
+                className='text-accent bg-white hover:bg-white/90 hover:scale-105 active:scale-100'
+                iconPosition='right'
                 style={{
                   background: 'var(--gradient-primary)',
                   border: 'none',
                 }}
-                icon={<ArrowRight className='text-accent' size={20} />}
+                icon={<ArrowRight className='text-white' size={20} />}
               />
               <BaseButton
                 text='Liên hệ tư vấn'
                 size='xl'
-                textClassName='text-white text-lg'
-                className='border-2 border-white/50 text-white bg-[#f9fbfbcc] hover:bg-white/10 backdrop-blur-sm'
+                textClassName='text-white text-lg group-hover:text-accent'
+                className='border-2 border-white/50 text-white bg-[#f9fbfbcc] hover:border-accent backdrop-blur-sm'
               />
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </div>
     </section>

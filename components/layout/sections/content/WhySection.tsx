@@ -6,7 +6,6 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
 import {
   Layers,
   Zap,
@@ -15,7 +14,7 @@ import {
   TrendingUp,
   CheckCircle,
 } from 'lucide-react';
-import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { ScrollReveal } from '@/components/ScrollReveal';
 
 const reasons = [
   {
@@ -52,19 +51,18 @@ const highlights = [
 ];
 
 export function WhySection() {
-  const sectionVisibleStyle = { opacity: 1, transform: 'none' as const };
-
   return (
     <section className='py-20 md:py-28'>
       <div className='container mx-auto px-4 max-w-7xl'>
         {/* Header */}
         <div className='max-w-3xl mx-auto text-center mb-12'>
-          <div style={sectionVisibleStyle}>
+          <ScrollReveal delay={0}>
             <span className='inline-block bg-accent/10 text-accent px-4 py-1.5 rounded-full text-sm font-medium mb-4'>
               Tại sao chọn CakeAI
             </span>
-          </div>
-          <div style={sectionVisibleStyle}>
+          </ScrollReveal>
+
+          <ScrollReveal delay={100}>
             <h2 className='text-3xl md:text-4xl font-bold text-foreground1 mb-4'>
               Lý do lựa chọn
               <span
@@ -78,7 +76,7 @@ export function WhySection() {
                 CakeAI
               </span>
             </h2>
-          </div>
+          </ScrollReveal>
         </div>
 
         <div className='max-w-4xl mx-auto'>
@@ -87,13 +85,12 @@ export function WhySection() {
             {reasons.map((reason, idx) => {
               const Icon = reason.icon;
               return (
-                <div key={idx} style={sectionVisibleStyle}>
-                  <div
-                    className='flex items-start gap-4 rounded-xl border border-border p-5 transition-all duration-300 hover:shadow-lg'
-                    style={{
-                      background: 'var(--gradient-card)',
-                    }}
-                  >
+                <ScrollReveal
+                  key={idx}
+                  animation={idx % 2 === 0 ? 'fade-left' : 'fade-right'}
+                  delay={idx * 100}
+                >
+                  <div className='flex items-start gap-4 rounded-xl border border-solid border-[#dce5e580] p-5 shadow-white transition-all duration-300 hover:[box-shadow:0_12px_40px_-8px_#00949440]'>
                     <div className='w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center shrink-0'>
                       <Icon className='w-5 h-5 text-accent' />
                     </div>
@@ -106,13 +103,13 @@ export function WhySection() {
                       </p>
                     </div>
                   </div>
-                </div>
+                </ScrollReveal>
               );
             })}
           </div>
 
           {/* Highlights */}
-          <div style={sectionVisibleStyle}>
+          <ScrollReveal animation='fade-up' delay={reasons.length * 100}>
             <div className='mt-12 flex flex-wrap items-center justify-center gap-8'>
               {highlights.map((highlight, idx) => {
                 const Icon = highlight.icon;
@@ -126,7 +123,7 @@ export function WhySection() {
                 );
               })}
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </div>
     </section>
