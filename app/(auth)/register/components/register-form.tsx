@@ -95,6 +95,13 @@ export default function RegisterForm() {
             />
           </Form.Item>
 
+          {/* Forgot password */}
+          <div className='forgot-password-link mb-2'>
+            <a href='/forgot-password' className='text-sm'>
+              Quên mật khẩu
+            </a>
+          </div>
+
           {/* Terms & Conditions */}
           <Form.Item
             name='terms'

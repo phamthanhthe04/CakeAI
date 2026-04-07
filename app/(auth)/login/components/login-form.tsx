@@ -70,11 +70,8 @@ export default function LoginForm() {
           </Form.Item>
 
           {/* Forgot password */}
-          <div className='flex justify-end mb-2'>
-            <a
-              href='/forgot-password'
-              className='text-accent text-sm hover:text-accent/80'
-            >
+          <div className='forgot-password-link mb-2'>
+            <a href='/forgot-password' className='text-sm'>
               Quên mật khẩu
             </a>
           </div>

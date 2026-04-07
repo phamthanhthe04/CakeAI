@@ -58,7 +58,7 @@ body {
   --color-muted-foreground: hsl(var(--muted-foreground));
   --color-foreground1: hsl(var(--foreground1));
   --color-muted: hsl(var(--muted));
-  --color-primary: hsl(var(--primary));
+  --color-primary: hsl(var(--primary)) !important;
   --color-secondary: hsl(var(--secondary));
   --color-background1: hsl(var(--background1));
 }
@@ -95,10 +95,38 @@ body {
     border-color: hsl(var(--accent)) !important;
   }
 
+  /* Ant Design Input Focus */
+  .ant-input-number:focus,
+  .ant-input-affix-wrapper:has(.ant-input:focus) {
+    border-color: hsl(var(--accent)) !important;
+    box-shadow: 0 0 0 2px hsl(var(--accent) / 0.2) !important;
+  }
+
   /* Ant Design Input Password Hover */
   .ant-input-password:hover .ant-input,
   .ant-input-password .ant-input:hover {
     border-color: hsl(var(--accent)) !important;
+  }
+
+  /* Ant Design Input Password Focus */
+  .ant-input-password:focus {
+    border-color: hsl(var(--accent)) !important;
+    box-shadow: 0 0 0 2px hsl(var(--accent) / 0.2) !important;
+  }
+
+  /* Forgot Password Link */
+  .forgot-password-link {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .forgot-password-link a {
+    color: hsl(var(--primary)) !important;
+    transition: color 0.3s ease;
+  }
+
+  .forgot-password-link a:hover {
+    color: hsl(var(--accent) / 0.8) !important;
   }
 
   /* Form centered */

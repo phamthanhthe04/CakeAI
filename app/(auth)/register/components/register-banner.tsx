@@ -5,41 +5,53 @@ import Link from 'next/link';
 export default function RegisterBanner() {
   return (
     <div
-      className='hidden lg:flex flex-col items-center justify-center p-8 relative overflow-hidden'
+      className='hidden lg:flex justify-center items-center text-white relative overflow-hidden h-full'
       style={{
-        background:
-          'linear-gradient(135deg, hsl(180, 100%, 29%), hsl(165, 80%, 40%) 50%, hsl(150, 70%, 45%))',
+        background: "url('/images/images/bg-register.png')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
       }}
     >
-      {/* Decorative Circles */}
-      <div className='absolute top-20 right-20 w-40 h-40 rounded-full bg-white/10 blur-3xl'></div>
-      <div className='absolute bottom-20 left-20 w-60 h-60 rounded-full bg-white/5 blur-3xl'></div>
+      {/* Overlay */}
+      <div className='absolute inset-0 bg-black/20' />
 
       {/* Content */}
-      <div className='relative z-10 text-center text-white max-w-md'>
-        {/* Illustration Placeholder */}
-        <div className='mb-8 text-6xl'>🚀</div>
+      <div className='relative z-10 text-center w-fit h-fit max-w-md'>
+        <h3 className='text-2xl font-medium mb-4'>Bắt đầu ngay</h3>
 
-        <h3 className='text-3xl font-bold mb-4'>Bắt đầu ngay</h3>
+        <div className='mt-2 mb-6'>
+          <p className='mb-2'>
+            Tham gia hàng triệu người dùng đang sử dụng CakeAI để tăng năng suất
+            và sáng tạo
+          </p>
+        </div>
 
-        <p className='text-lg mb-6 text-white/90'>
-          Tham gia hàng triệu người dùng đang sử dụng CakeAI để tăng năng suất
-          và sáng tạo
-        </p>
+        <div className='italic underline underline-offset-4 mb-6'>
+          Đã có tài khoản?
+        </div>
 
-        <p className='text-sm mb-8 text-white/80'>
-          <span className='block mb-2'>Đã có tài khoản?</span>
-          <span className='text-xs text-white/70'>
-            Bạn có thể đăng nhập để tiếp tục
-          </span>
-        </p>
-
-        <Link
-          href='/login'
-          className='inline-block px-6 py-3 bg-white text-accent font-semibold rounded-lg hover:bg-white/90 transition-all duration-300'
-        >
-          Đăng nhập ngay
-        </Link>
+        <div className='flex justify-end'>
+          <Link href='/login' className='w-fit h-fit'>
+            <button
+              type='button'
+              style={{
+                boxShadow: 'none',
+                fontSize: '14px',
+                fontWeight: 600,
+                lineHeight: '16px',
+                border: 'none',
+                borderRadius: '8px',
+                color: '#fff',
+                background:
+                  'linear-gradient(90deg, var(--CakeAI-liner-gradient-start-primary-color) 0%, var(--CakeAI-liner-gradient-end-primary-color) 100%)',
+                padding: '10px 24px',
+              }}
+              className='font-medium hover:opacity-90 transition-opacity'
+            >
+              Đăng nhập ngay
+            </button>
+          </Link>
+        </div>
       </div>
     </div>
   );
