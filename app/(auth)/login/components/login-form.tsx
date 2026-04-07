@@ -100,10 +100,10 @@ export default function LoginForm() {
           </Form.Item>
 
           {/* Forgot password */}
-          <div className='forgot-password-link mb-2'>
-            <a href='/forgot-password' className='text-sm'>
+          <div className='w-full forgot-password-link mb-2 flex justify-end'>
+            <div className='text-sm text-accent cursor-pointer'>
               Quên mật khẩu
-            </a>
+            </div>
           </div>
 
           {/* Submit */}
