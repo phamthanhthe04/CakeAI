@@ -3,7 +3,7 @@
  * Production-grade footer with proper styling and structure
  */
 
-import Image from 'next/image';
+import { OptimizedImage } from '@/components/ui/optimized-image';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -30,26 +30,14 @@ export function Footer() {
   ];
 
   return (
-    <footer
-      className='py-16'
-      style={{
-        backgroundColor: 'hsl(var(--muted) / 0.3)',
-        borderTop: '1px solid hsl(var(--border) / 0.5)',
-      }}
-    >
+    <footer className='py-16'>
       <div className='w-full px-4 mx-auto'>
         {/* Main Grid */}
         <div className='grid md:grid-cols-4 gap-12 pb-12'>
           {/* Brand Section */}
           <div>
             <div className='flex items-center gap-2 mb-4'>
-              <Image
-                src='https://app.cakeai.vn/logo.svg'
-                alt='CakeAI'
-                width={120}
-                height={40}
-                style={{ objectFit: 'contain', maxHeight: '40px' }}
-              />
+              <OptimizedImage imageKey='logo' rounded='none' />
             </div>
             <p className='text-muted-foreground text-sm'>
               Nền tảng AI tất cả trong một cho cá nhân và tổ chức.
@@ -58,7 +46,9 @@ export function Footer() {
 
           {/* Products */}
           <div>
-            <h4 className='font-semibold text-foreground1 mb-4'>Sản phẩm</h4>
+            <h4 className='font-semibold text-foreground1 mb-4 text-sm'>
+              Sản phẩm
+            </h4>
             <ul className='space-y-2'>
               {productLinks.map((link) => (
                 <li key={link.label}>
@@ -75,7 +65,9 @@ export function Footer() {
 
           {/* Company */}
           <div>
-            <h4 className='font-semibold text-foreground1 mb-4'>Công ty</h4>
+            <h4 className='font-semibold text-foreground1 mb-4 text-sm'>
+              Công ty
+            </h4>
             <ul className='space-y-2'>
               {companyLinks.map((link) => (
                 <li key={link.label}>
@@ -92,7 +84,9 @@ export function Footer() {
 
           {/* Support */}
           <div>
-            <h4 className='font-semibold text-foreground1 mb-4'>Hỗ trợ</h4>
+            <h4 className='font-semibold text-foreground1 mb-4 text-sm'>
+              Hỗ trợ
+            </h4>
             <ul className='space-y-2'>
               {supportLinks.map((link) => (
                 <li key={link.label}>
@@ -109,9 +103,9 @@ export function Footer() {
         </div>
 
         {/* Company Info Grid */}
-        <div className='py-10 border-y border-border grid grid-cols-1 md:grid-cols-2 gap-8'>
+        <div className='py-10 border-y border-[#d8e2de] grid grid-cols-1 md:grid-cols-2 gap-8'>
           {/* 84Soft */}
-          <div className='bg-white border border-border rounded-xl p-6 space-y-3'>
+          <div className='bg-white border border-solid border-[#d8e2de] rounded-xl p-6 space-y-3'>
             <div className='font-bold text-accent uppercase text-sm'>
               Chủ sở hữu
             </div>
@@ -143,7 +137,7 @@ export function Footer() {
           </div>
 
           {/* ITS */}
-          <div className='bg-white border border-border rounded-xl p-6 space-y-3'>
+          <div className='bg-white border border-solid border-[#d8e2de] rounded-xl p-6 space-y-3'>
             <div className='font-bold text-accent uppercase text-sm'>
               Đối tác triển khai chiến lược
             </div>

@@ -8,6 +8,8 @@ import { FeatureItem } from './feature-item';
 type BadgeItem = {
   text: string;
   icon?: ReactNode;
+  className?: string;
+  padding?: 'default' | 'none';
 };
 
 type FeatureCardProps = {
@@ -28,7 +30,7 @@ export function FeatureCard({
   return (
     <div
       className={cn(
-        'rounded-xl border border-[#e7eff3] bg-white p-6 shadow-sm',
+        'group rounded-xl border border-[#e7eff3] bg-white p-6 shadow-sm transition-all duration-300',
         className,
       )}
     >
@@ -40,9 +42,17 @@ export function FeatureCard({
         description={description}
       />
       {badges && badges.length > 0 && (
-        <div className='mt-4 flex flex-wrap gap-2'>
+        <div className='mt-4 flex flex-col gap-2'>
           {badges.map((badge, idx) => (
-            <Badge key={idx} text={badge.text} icon={badge.icon} tone='soft' />
+            <Badge
+              key={idx}
+              text={badge.text}
+              icon={badge.icon}
+              tone='soft'
+              textClassName='text-foreground1 text-sm'
+              className={badge.className}
+              padding={badge.padding}
+            />
           ))}
         </div>
       )}

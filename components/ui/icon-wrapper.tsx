@@ -47,7 +47,7 @@ export function IconWrapper({
   return (
     <div
       className={cn(
-        'rounded-xl flex items-center justify-center shrink-0',
+        'rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300',
         sizeMap[size],
         variant !== 'gradient' && variantClass,
         className,

@@ -19,12 +19,14 @@ import {
   FileTextIcon,
   Link2Icon,
   IconWrapper,
+  Layers3Icon,
+  GlobeIcon,
 } from '@/components';
-import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { ScrollReveal } from '../../../ScrollReveal';
 
 const features = [
   {
-    icon: BrainIcon,
+    icon: Layers3Icon,
     title: 'Tích hợp nhiều mô hình AI hàng đầu',
     description:
       'Sử dụng linh hoạt nhiều mô hình AI tiên tiến trong cùng một nền tảng, được cập nhật liên tục.',
@@ -34,7 +36,7 @@ const features = [
     ],
   },
   {
-    icon: MessageSquareIcon,
+    icon: GlobeIcon,
     title: 'Ghi nhớ thông tin làm việc',
     description:
       'Lưu trữ và học hỏi từ các cuộc trò chuyện trước để phục vụ bạn tốt hơn.',
@@ -44,7 +46,7 @@ const features = [
     ],
   },
   {
-    icon: WorkflowIcon,
+    icon: GlobeIcon,
     title: 'Thực hiện theo quy trình',
     description:
       'Không chỉ trả lời câu hỏi mà còn thực hiện công việc theo quy trình được định sẵn.',
@@ -62,112 +64,75 @@ const inputTypes = [
 ];
 
 export function AIChatSection() {
-  const { ref: leftRef, isInView: leftInView } = useScrollAnimation({
-    threshold: 0.2,
-    once: true,
-  });
-  const { ref: rightRef, isInView: rightInView } = useScrollAnimation({
-    threshold: 0.2,
-    once: true,
-  });
-  const { ref: inputTypesRef, isInView: inputTypesInView } = useScrollAnimation(
-    {
-      threshold: 0.2,
-      once: true,
-    },
-  );
-
   return (
     <section className='py-20 md:py-28'>
       <div className='container mx-auto px-4 max-w-7xl'>
         {/* Header - Slide up from bottom */}
-        <div
-          className='max-w-3xl mx-auto text-center mb-12 space-y-4 opacity-0 transition-all duration-700 ease-out'
-          style={{
-            animation: 'slideUpOnce 0.8s ease-out forwards',
-          }}
-        >
-          <Badge tone='gray' text='AI Chat' />
-          <h2 className='text-3xl md:text-4xl font-bold text-foreground1 mb-4'>
-            Nền tảng trò chuyện AI
-            <span
-              style={{
-                background: 'var(--gradient-primary)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}
-            >
-              {' '}
-              không giới hạn
-            </span>
-          </h2>
-          <p className='text-muted-foreground text-lg'>
-            CakeAI không chỉ là chatbot thông thường, mà là nền tảng trò chuyện
-            AI thông minh phục vụ công việc, học tập và quản lý trong thực tế.
-          </p>
+        <div className='max-w-3xl mx-auto text-center mb-12 space-y-4'>
+          <ScrollReveal delay={0}>
+            <Badge tone='gray' text='AI Chat' />
+          </ScrollReveal>
+          <ScrollReveal delay={100}>
+            <h2 className='text-3xl md:text-4xl font-bold text-foreground1 mb-4'>
+              Nền tảng trò chuyện AI
+              <span
+                style={{
+                  background: 'var(--gradient-primary)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
+                {' '}
+                không giới hạn
+              </span>
+            </h2>
+          </ScrollReveal>
+          <ScrollReveal delay={200}>
+            <p className='text-muted-foreground text-lg'>
+              CakeAI không chỉ là chatbot thông thường, mà là nền tảng trò
+              chuyện AI thông minh phục vụ công việc, học tập và quản lý trong
+              thực tế.
+            </p>
+          </ScrollReveal>
         </div>
 
         {/* Main Grid */}
         <div className='grid lg:grid-cols-2 gap-12 items-center mb-12'>
           {/* Left - Features - Slide from Left */}
-          <div
-            ref={leftRef}
-            className='space-y-6 transition-all duration-1000 ease-out'
-            style={{
-              opacity: leftInView ? 1 : 0,
-              transform: leftInView ? 'translateX(0)' : 'translateX(-100px)',
-            }}
-          >
+          <div className='space-y-6'>
             {features.map((feature, idx) => {
               const Icon = feature.icon;
               return (
-                <div
-                  key={idx}
-                  style={{
-                    opacity: leftInView ? 1 : 0,
-                    transform: leftInView
-                      ? 'translateY(0)'
-                      : 'translateY(20px)',
-                    transition: `all 0.6s ease-out ${idx * 0.1}s`,
-                  }}
-                >
+                <ScrollReveal key={idx} animation='fade-left' delay={idx * 100}>
                   <FeatureCard
-                    icon={<Icon className='text-accent' size={18} />}
+                    icon={
+                      <IconWrapper variant='gradient'>
+                        <Icon className='text-white' size={24} />
+                      </IconWrapper>
+                    }
+                    className='hover:[box-shadow:0_12px_40px_-8px_#00949440]'
                     title={feature.title}
                     description={feature.description}
                     badges={feature.badges.map((badge) => ({
                       text: badge.text,
                       icon: <badge.icon className='text-accent' size={16} />,
+                      className: 'border-0',
+                      padding: 'none',
                     }))}
                   />
-                </div>
+                </ScrollReveal>
               );
             })}
           </div>
 
           {/* Right - Image - Slide from Right */}
-          <div
-            ref={rightRef}
-            className='transition-all duration-1000 ease-out'
-            style={{
-              opacity: rightInView ? 1 : 0,
-              transform: rightInView ? 'translateX(0)' : 'translateX(100px)',
-            }}
-          >
-            <OptimizedImage imageKey='chat' />
-          </div>
+          <ScrollReveal animation='fade-right' delay={0}>
+            <OptimizedImage imageKey='chat' maxWidth='448px' />
+          </ScrollReveal>
         </div>
 
         {/* Input Types Support */}
-        <div
-          ref={inputTypesRef}
-          className='opacity-0 transition-all duration-700 ease-out'
-          style={{
-            animation: inputTypesInView
-              ? 'slideUpOnce 0.8s ease-out forwards'
-              : 'none',
-          }}
-        >
+        <ScrollReveal delay={0}>
           <div
             className='rounded-2xl border border-border p-8 md:p-12 text-white'
             style={{
@@ -189,8 +154,10 @@ export function AIChatSection() {
                   <Badge
                     key={idx}
                     text={input.text}
+                    tone='teal'
                     textClassName='text-white'
-                    className='flex flex-col bg-white/10 rounded-lg px-4 py-3'
+                    padding='lg'
+                    className='flex flex-col bg-white/10 rounded-lg hover:bg-white/15 transition-colors min-w-[140px]'
                     icon={
                       <IconWrapper size='lg' variant='gradient'>
                         <Icon className='text-white' size={24} />
@@ -201,21 +168,8 @@ export function AIChatSection() {
               })}
             </div>
           </div>
-        </div>
+        </ScrollReveal>
       </div>
-
-      <style>{`
-        @keyframes slideUpOnce {
-          from {
-            opacity: 0;
-            transform: translateY(40px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
     </section>
   );
 }
