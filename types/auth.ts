@@ -67,3 +67,15 @@ export type RegisterResponse = {
   token: string;
   refreshToken?: string;
 };
+
+export type ResetPasswordRequest = {
+  email: string;
+  password: string;
+  otp: string;
+};
+
+export type ResetPasswordResponse = {
+  id: number;
+  email: string;
+  message?: string;
+};

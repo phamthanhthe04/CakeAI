@@ -8,6 +8,8 @@ import type {
   LoginResponse,
   RegisterRequest,
   RegisterResponse,
+  ResetPasswordRequest,
+  ResetPasswordResponse,
 } from '@/types';
 
 export async function login(payload: LoginRequest) {
@@ -49,6 +51,18 @@ export async function forgotPassword(payload: ForgotPasswordRequest) {
 export async function register(payload: RegisterRequest) {
   const response = await apiClient<RegisterResponse>(
     buildApiUrl('/api/v1/auth/register'),
+    {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    },
+  );
+
+  return response.data;
+}
+
+export async function resetPassword(payload: ResetPasswordRequest) {
+  const response = await apiClient<ResetPasswordResponse>(
+    buildApiUrl('/api/v1/auth/reset-password'),
     {
       method: 'POST',
       body: JSON.stringify(payload),

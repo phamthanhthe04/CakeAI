@@ -1,7 +1,7 @@
 // app/layout.tsx
 import { Inter } from 'next/font/google';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
-import { ConfigProvider } from 'antd';
+import { App as AntdApp, ConfigProvider } from 'antd';
 import './globals.css';
 
 const inter = Inter({
@@ -28,10 +28,11 @@ export default function RootLayout({
                 // (Tùy chọn) Đảm bảo font-size và các thông số khác đồng bộ
                 fontSize: 14,
                 borderRadius: 6,
+                colorLink: '#551A8B',
               },
             }}
           >
-            {children}
+            <AntdApp>{children}</AntdApp>
           </ConfigProvider>
         </AntdRegistry>
       </body>

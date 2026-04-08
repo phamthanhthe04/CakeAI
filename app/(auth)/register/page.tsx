@@ -10,11 +10,11 @@ export default function RegisterPage() {
       {/* Left - Form Section */}
       <div className='flex flex-col bg-white'>
         {/* Logo */}
-        <div className='mb-8 lg:justify-start lg:ml-3 py-4'>
+        <div className='flex justify-center lg:ml-3 lg:justify-start'>
           <OptimizedImage
             imageKey='logo'
-            maxWidth='189px'
-            maxHeight='80px'
+            containerClassName='h-[80px] w-[189px]'
+            className='h-full w-full object-contain'
             rounded='none'
           />
         </div>

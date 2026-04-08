@@ -6,13 +6,15 @@ import RegisterBanner from '../register/components/register-banner';
 
 export default function ForgotPasswordPage() {
   return (
-    <div className='grid min-h-screen lg:grid-cols-2'>
+    <div className='min-h-screen grid lg:grid-cols-2'>
+      {/* Left - Form Section */}
       <div className='flex flex-col bg-white'>
-        <div className='mb-8 py-4 lg:ml-3 lg:justify-start'>
+        {/* Logo */}
+        <div className='flex justify-center lg:ml-3 lg:justify-start'>
           <OptimizedImage
             imageKey='logo'
-            maxWidth='189px'
-            maxHeight='80px'
+            containerClassName='h-[80px] w-[189px]'
+            className='h-full w-full object-contain'
             rounded='none'
           />
         </div>

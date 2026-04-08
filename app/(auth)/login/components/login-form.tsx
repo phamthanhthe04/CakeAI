@@ -1,9 +1,9 @@
 'use client';
 
-import { Form, Input, Button, notification } from 'antd';
+import { App as AntdApp, Form, Input, Button } from 'antd';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { login, loginWithGoogle } from '@/services';
@@ -41,6 +41,7 @@ export default function LoginForm() {
   const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
   const [isGoogleReady, setIsGoogleReady] = useState(false);
   const router = useRouter();
+  const { notification } = AntdApp.useApp();
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -215,7 +216,7 @@ export default function LoginForm() {
                 />
               }
               iconRender={(visible) =>
-                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
               }
               className='hover:border-accent transition-colors'
               style={{
@@ -282,10 +283,7 @@ export default function LoginForm() {
         {/* Register */}
         <div className='flex items-center justify-center gap-x-1 mt-3 lg:hidden'>
           <span className='italic text-sm'>Nếu bạn chưa có tài khoản?</span>
-          <Link
-            href='/register'
-            className='hover:text-accent/80 font-semibold text-sm'
-          >
+          <Link href='/register' className='text-sm'>
             Đăng ký
           </Link>
         </div>
