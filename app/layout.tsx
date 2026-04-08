@@ -1,7 +1,8 @@
 // app/layout.tsx
 import { Inter } from 'next/font/google';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
-import { App as AntdApp, ConfigProvider } from 'antd';
+import { ConfigProvider } from 'antd';
+import RouteTopLoader from '@/components/layout/route-top-loader';
 import './globals.css';
 
 const inter = Inter({
@@ -18,6 +19,7 @@ export default function RootLayout({
   return (
     <html lang='en' className={inter.variable}>
       <body>
+        <RouteTopLoader />
         <AntdRegistry>
           <ConfigProvider
             theme={{
@@ -32,7 +34,7 @@ export default function RootLayout({
               },
             }}
           >
-            <AntdApp>{children}</AntdApp>
+            {children}
           </ConfigProvider>
         </AntdRegistry>
       </body>

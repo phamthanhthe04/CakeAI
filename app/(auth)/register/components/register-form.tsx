@@ -90,7 +90,7 @@ export default function RegisterForm() {
 
   return (
     <div className='flex flex-1 items-center justify-center'>
-      <div className='w-full max-w-md px-4'>
+      <div className='w-full px-4 lg:w-100 lg:px-0'>
         <div className='mb-3 text-center text-2xl font-medium lg:mb-6'>
           Đăng ký
         </div>
@@ -229,7 +229,7 @@ export default function RegisterForm() {
         </Form>
         {/* Login Google */}
         <div className=''>
-          <div className='flex items-center justify-center gap-x-2 h-9 cursor-pointer bg-[linear-gradient(90deg,var(--CakeAI-liner-gradient-start-primary-color),var(--CakeAI-liner-gradient-end-primary-color))] rounded-lg hover:opacity-90 transition-opacity'>
+          <div className='flex items-center justify-center gap-x-2 h-9 cursor-pointer bg-[linear-gradient(90deg,var(--CakeAI-liner-gradient-start-primary-color),var(--CakeAI-liner-gradient-end-primary-color))] rounded-lg transition-opacity'>
             <div className='bg-white flex justify-center items-center rounded-md w-7 h-7'>
               <Image
                 src='/images/images/google.e3b196e3.svg'

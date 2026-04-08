@@ -57,6 +57,7 @@ export function OptimizedImage({
         width={fill ? undefined : image.width}
         height={fill ? undefined : image.height}
         priority={image.priority}
+        loading={image.loading}
         fill={fill}
         className={cn(
           'agent_shadowCard__OMD5Z',

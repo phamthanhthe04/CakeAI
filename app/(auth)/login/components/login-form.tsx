@@ -165,7 +165,7 @@ export default function LoginForm() {
 
   return (
     <div className='flex-1 flex justify-center items-center'>
-      <div className='w-full max-w-md px-4'>
+      <div className='w-full px-4 lg:w-100 lg:px-0'>
         {/* Title */}
         <div className='text-center font-medium text-2xl mb-3 lg:mb-6'>
           Đăng nhập
@@ -264,7 +264,7 @@ export default function LoginForm() {
             type='button'
             onClick={handleGoogleLogin}
             disabled={isGoogleSubmitting}
-            className='w-full flex items-center justify-center gap-x-2 h-9 cursor-pointer bg-[linear-gradient(90deg,var(--CakeAI-liner-gradient-start-primary-color),var(--CakeAI-liner-gradient-end-primary-color))] rounded-lg hover:opacity-90 transition-opacity disabled:opacity-70 disabled:cursor-not-allowed'
+            className='w-full flex items-center justify-center gap-x-2 h-9 cursor-pointer bg-[linear-gradient(90deg,var(--CakeAI-liner-gradient-start-primary-color),var(--CakeAI-liner-gradient-end-primary-color))] rounded-lg transition-opacity disabled:opacity-70 disabled:cursor-not-allowed'
           >
             <div className='bg-white flex justify-center items-center rounded-md w-7 h-7'>
               <Image

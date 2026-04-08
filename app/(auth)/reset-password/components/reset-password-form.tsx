@@ -65,7 +65,7 @@ export default function ResetPasswordForm() {
 
   return (
     <div className='flex flex-1 items-center justify-center'>
-      <div className='w-full max-w-md px-4'>
+      <div className='w-full px-4 lg:w-100 lg:px-0'>
         <div className='mb-6 text-center text-4xl font-medium'>
           Đặt lại mật khẩu
         </div>

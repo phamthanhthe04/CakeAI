@@ -7,6 +7,7 @@
  */
 
 type ImageFormat = 'png' | 'webp' | 'jpg' | 'jpeg' | 'svg';
+type ImageLoading = 'lazy' | 'eager';
 
 interface ImageConfig {
   path: string;
@@ -15,6 +16,7 @@ interface ImageConfig {
   height: number;
   format?: ImageFormat;
   priority?: boolean;
+  loading?: ImageLoading;
 }
 
 /**
@@ -27,6 +29,7 @@ const img = (
   height: number,
   format: ImageFormat = 'png',
   priority = false,
+  loading?: ImageLoading,
 ): ImageConfig => ({
   path: `/images/images/${name}.${format}`,
   alt,
@@ -34,6 +37,7 @@ const img = (
   height,
   format,
   priority,
+  loading,
 });
 
 /**
@@ -101,7 +105,7 @@ export const IMAGES = {
   ),
   thumb_lego: img('thumb_lego', 'Hình ảnh phong cách Lego', 400, 400, 'webp'),
   thumb_art: img('thumb_art', 'Hình ảnh phong cách Art', 400, 400, 'webp'),
-  logo: img('logo', 'Logo CakeAI', 120, 40, 'svg'),
+  logo: img('logo', 'Logo CakeAI', 120, 40, 'svg', false, 'eager'),
 } as const;
 
 export type ImageKey = keyof typeof IMAGES;

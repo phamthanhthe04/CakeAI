@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@import 'antd/dist/reset.css';
 
 *,
 *::before,
@@ -47,6 +46,7 @@ body {
     hsl(0, 0%, 100%),
     hsl(180, 15%, 98%)
   );
+  --ant-blue-4: #69b1ff;
 }
 @theme {
   --font-sans: var(--font-inter);
@@ -61,6 +61,7 @@ body {
   --color-primary: hsl(var(--primary)) !important;
   --color-secondary: hsl(var(--secondary));
   --color-background1: hsl(var(--background1));
+  --color-blue-4: hsl(var(--ant-blue-4));
 }
 
 .shadow-card {
@@ -127,7 +128,7 @@ body {
   }
 
   .forgot-password-link a:hover {
-    color: hsl(var(--accent) / 0.8) !important;
+    color: #69b1ff !important;
   }
 
   /* Form centered */
@@ -145,15 +146,6 @@ body {
   }
 }
 
-@keyframes route-top-loader {
-  0% {
-    transform: translateX(-120%);
-  }
-  100% {
-    transform: translateX(250%);
-  }
-}
-
 .route-top-loader-wrap {
   position: fixed;
   top: 0;
@@ -161,15 +153,22 @@ body {
   right: 0;
   z-index: 9999;
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.route-top-loader-wrap.is-active {
+  opacity: 1;
 }
 
 .route-top-loader {
   height: 3px;
-  width: 40%;
+  width: 0;
   background: linear-gradient(
     90deg,
     var(--CakeAI-liner-gradient-start-primary-color),
     var(--CakeAI-liner-gradient-end-primary-color)
   );
-  animation: route-top-loader 1s ease-in-out infinite;
+  transition: width 0.2s ease;
+  box-shadow: 0 0 8px rgba(2, 150, 151, 0.55);
 }

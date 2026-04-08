@@ -31,7 +31,7 @@ export default function ForgotPasswordForm() {
 
   return (
     <div className='flex flex-1 items-center justify-center'>
-      <div className='w-full max-w-md px-4'>
+      <div className='w-full px-4 lg:w-100 lg:px-0'>
         <div className='mb-3 text-center text-[24px] font-medium'>
           Quên mật khẩu
         </div>
@@ -63,24 +63,12 @@ export default function ForgotPasswordForm() {
             />
           </Form.Item>
 
-          <Form.Item>
-            <Button
-              type='primary'
-              htmlType='submit'
-              block
-              style={{
-                borderRadius: 8,
-                fontWeight: 600,
-                background:
-                  'linear-gradient(90deg, var(--CakeAI-liner-gradient-start-primary-color), var(--CakeAI-liner-gradient-end-primary-color))',
-                border: 'none',
-                boxShadow: 'none',
-                height: '36px',
-              }}
-            >
-              Gửi
-            </Button>
-          </Form.Item>
+          <button
+            type='submit'
+            className='w-full flex items-center justify-center gap-x-2 h-9 cursor-pointer bg-[#029697] hover:opacity-90 rounded-lg transition-opacity disabled:opacity-70 text-white disabled:cursor-not-allowed'
+          >
+            Gửi
+          </button>
         </Form>
         <div className='mt-3 flex items-center justify-center gap-x-1 lg:hidden'>
           <span className='text-sm italic'>Nếu bạn đã có tài khoản?</span>

@@ -51,7 +51,7 @@ export default function LoginBanner() {
                   'linear-gradient(90deg, var(--CakeAI-liner-gradient-start-primary-color) 0%, var(--CakeAI-liner-gradient-end-primary-color) 100%)',
                 padding: '10px 24px',
               }}
-              className='font-medium hover:opacity-90 transition-opacity'
+              className='font-medium'
             >
               Đăng ký ngay
             </button>
