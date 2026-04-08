@@ -1,5 +1,5 @@
 export type ApiResponse<T> = {
-  code: number;
+  code?: number;
   data: T;
   message: string;
 };
@@ -21,3 +21,49 @@ export type LoginUser = {
 };
 
 export type LoginResponse = LoginUser;
+
+export type GoogleLoginRequest = {
+  token: string;
+  agentCode: string | null;
+};
+
+export type GoogleLoginUser = {
+  id: number;
+  email: string;
+  name: string;
+  role?: number;
+  phone?: string | null;
+  avatar?: string | null;
+  token: string;
+  refreshToken?: string;
+};
+
+export type GoogleLoginResponse = GoogleLoginUser;
+
+export type ForgotPasswordRequest = {
+  email: string;
+};
+
+export type ForgotPasswordResponse = {
+  id: number;
+  email: string;
+  code?: string;
+};
+
+export type RegisterRequest = {
+  email: string;
+  password: string;
+  phone: string;
+  name: string;
+  agentCode: string | null;
+};
+
+export type RegisterResponse = {
+  id: number;
+  email: string;
+  name: string;
+  phone?: string | null;
+  role?: number;
+  token: string;
+  refreshToken?: string;
+};

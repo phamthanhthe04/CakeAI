@@ -1,18 +1,70 @@
 'use client';
 
 import { Form, Input, Button, notification } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { login } from '@/services';
+import { login, loginWithGoogle } from '@/services';
 import type { LoginRequest } from '@/types';
+import { env } from '@/config/env';
+
+type GoogleTokenResponse = {
+  access_token?: string;
+};
+
+type GoogleTokenClient = {
+  requestAccessToken: (overrideConfig?: { prompt?: string }) => void;
+};
+
+declare global {
+  interface Window {
+    google?: {
+      accounts?: {
+        oauth2?: {
+          initTokenClient: (config: {
+            client_id: string;
+            scope: string;
+            callback: (response: GoogleTokenResponse) => void;
+            error_callback?: () => void;
+          }) => GoogleTokenClient;
+        };
+      };
+    };
+  }
+}
 
 export default function LoginForm() {
   const [form] = Form.useForm();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
+  const [isGoogleReady, setIsGoogleReady] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    if (window.google?.accounts?.oauth2) {
+      setIsGoogleReady(true);
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    script.onload = () => setIsGoogleReady(true);
+    document.body.appendChild(script);
+
+    return () => {
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+    };
+  }, []);
 
   const handleSubmit = async (values: LoginRequest) => {
     try {
@@ -34,6 +86,80 @@ export default function LoginForm() {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleGoogleLogin = () => {
+    if (!env.googleClientId) {
+      notification.warning({
+        title: 'Notification',
+        description: 'Thiếu NEXT_PUBLIC_GOOGLE_CLIENT_ID để đăng nhập Google',
+        placement: 'topRight',
+      });
+      return;
+    }
+
+    if (!isGoogleReady || !window.google?.accounts?.oauth2) {
+      notification.warning({
+        title: 'Notification',
+        description: 'Google login chưa sẵn sàng, vui lòng thử lại',
+        placement: 'topRight',
+      });
+      return;
+    }
+
+    setIsGoogleSubmitting(true);
+
+    const tokenClient = window.google.accounts.oauth2.initTokenClient({
+      client_id: env.googleClientId,
+      scope: 'openid email profile',
+      callback: async (response: GoogleTokenResponse) => {
+        const googleToken = response.access_token;
+
+        if (!googleToken) {
+          setIsGoogleSubmitting(false);
+          notification.warning({
+            title: 'Notification',
+            description: 'Không nhận được token Google',
+            placement: 'topRight',
+          });
+          return;
+        }
+
+        try {
+          const loginData = await loginWithGoogle({
+            token: googleToken,
+            agentCode: null,
+          });
+
+          if (typeof window !== 'undefined') {
+            localStorage.setItem(
+              'accessToken',
+              loginData.token || loginData.refreshToken || '',
+            );
+          }
+
+          router.push('/');
+        } catch {
+          notification.warning({
+            title: 'Notification',
+            description: 'Đăng nhập Google thất bại',
+            placement: 'topRight',
+          });
+        } finally {
+          setIsGoogleSubmitting(false);
+        }
+      },
+      error_callback: () => {
+        setIsGoogleSubmitting(false);
+        notification.warning({
+          title: 'Notification',
+          description: 'Không thể mở popup Google',
+          placement: 'topRight',
+        });
+      },
+    });
+
+    tokenClient.requestAccessToken({ prompt: 'select_account' });
   };
 
   return (
@@ -101,9 +227,12 @@ export default function LoginForm() {
 
           {/* Forgot password */}
           <div className='w-full forgot-password-link mb-2 flex justify-end'>
-            <div className='text-sm text-accent cursor-pointer'>
+            <Link
+              href='/forgot-password'
+              className='text-sm text-[#029697] cursor-pointer'
+            >
               Quên mật khẩu
-            </div>
+            </Link>
           </div>
 
           {/* Submit */}
@@ -129,8 +258,13 @@ export default function LoginForm() {
         </Form>
 
         {/* Login Google */}
-        <div className='mt-3 '>
-          <div className='flex items-center justify-center gap-x-2 h-9 cursor-pointer bg-[linear-gradient(90deg,var(--CakeAI-liner-gradient-start-primary-color),var(--CakeAI-liner-gradient-end-primary-color))] rounded-lg hover:opacity-90 transition-opacity'>
+        <div className=' '>
+          <button
+            type='button'
+            onClick={handleGoogleLogin}
+            disabled={isGoogleSubmitting}
+            className='w-full flex items-center justify-center gap-x-2 h-9 cursor-pointer bg-[linear-gradient(90deg,var(--CakeAI-liner-gradient-start-primary-color),var(--CakeAI-liner-gradient-end-primary-color))] rounded-lg hover:opacity-90 transition-opacity disabled:opacity-70 disabled:cursor-not-allowed'
+          >
             <div className='bg-white flex justify-center items-center rounded-md w-7 h-7'>
               <Image
                 src='/images/images/google.e3b196e3.svg'
@@ -139,10 +273,10 @@ export default function LoginForm() {
                 height={20}
               />
             </div>
-            <span className='text-white font-semibold'>
-              Đăng nhập bằng Google
+            <span className='text-white text-sm font-semibold'>
+              {isGoogleSubmitting ? 'Đang xử lý...' : 'Đăng nhập bằng Google'}
             </span>
-          </div>
+          </button>
         </div>
 
         {/* Register */}

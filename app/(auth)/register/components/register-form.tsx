@@ -1,9 +1,13 @@
 'use client';
 
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, notification } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { register } from '@/services';
+import type { RegisterRequest } from '@/types';
 
 function UserIcon() {
   return (
@@ -41,6 +45,47 @@ function PhoneIcon() {
 
 export default function RegisterForm() {
   const [form] = Form.useForm();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
+
+  const handleSubmit = async (values: {
+    name: string;
+    email: string;
+    phone: string;
+    password: string;
+    confirmPassword: string;
+  }) => {
+    try {
+      setIsSubmitting(true);
+
+      const payload: RegisterRequest = {
+        email: values.email,
+        password: values.password,
+        phone: values.phone,
+        name: values.name,
+        agentCode: null,
+      };
+
+      const registerData = await register(payload);
+
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(
+          'accessToken',
+          registerData.token || registerData.refreshToken || '',
+        );
+      }
+
+      router.push('/');
+    } catch {
+      notification.warning({
+        title: 'Notification',
+        description: 'Đăng ký thất bại, vui lòng kiểm tra lại thông tin',
+        placement: 'topRight',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className='flex flex-1 items-center justify-center'>
@@ -52,7 +97,7 @@ export default function RegisterForm() {
         <Form
           form={form}
           layout='vertical'
-          onFinish={(values) => console.log(values)}
+          onFinish={handleSubmit}
           className='w-full'
         >
           <Form.Item
@@ -162,6 +207,7 @@ export default function RegisterForm() {
             <Button
               type='primary'
               htmlType='submit'
+              loading={isSubmitting}
               block
               style={{
                 boxShadow: 'none',

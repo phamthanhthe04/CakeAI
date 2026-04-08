@@ -31,7 +31,7 @@ export async function apiClient<T>(
 
   const payload = (await response.json()) as ApiResponse<T>;
 
-  if (payload.code !== 200) {
+  if (typeof payload.code === 'number' && payload.code !== 200) {
     throw new Error(payload.message || 'Request failed');
   }
 
