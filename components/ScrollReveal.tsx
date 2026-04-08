@@ -54,10 +54,10 @@ export function ScrollReveal({
 }: ScrollRevealProps) {
   // Animation disabled - renders children directly without animation effects
   // To re-enable animations, comment out this return and uncomment the animation code below
-  return <div>{children}</div>;
+  // return <div>{children}</div>;
 
   // Original animation code (commented out for disable mode):
-  /*
+
   const { ref, isVisible } = useInView(threshold);
   const variant = animationVariants[animation];
 
@@ -77,5 +77,4 @@ export function ScrollReveal({
       {children}
     </div>
   );
-  */
 }

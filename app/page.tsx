@@ -1,11 +1,10 @@
-import { HOMEPAGE_SECTIONS } from './sections';
+import MainLayout from './(main)/layout';
+import MainHomePage from './(main)/page';
 
 export default function HomePage() {
   return (
-    <div className='relative min-h-screen overflow-hidden'>
-      {HOMEPAGE_SECTIONS.map(({ id, Component }) => (
-        <Component key={id} />
-      ))}
-    </div>
+    <MainLayout>
+      <MainHomePage />
+    </MainLayout>
   );
 }

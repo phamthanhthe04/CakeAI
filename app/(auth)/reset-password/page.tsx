@@ -1,10 +1,10 @@
 'use client';
 
 import { OptimizedImage } from '@/components/ui/optimized-image';
-import ForgotPasswordForm from './components/forgot-password-form';
 import RegisterBanner from '../register/components/register-banner';
+import ResetPasswordForm from './components/reset-password-form';
 
-export default function ForgotPasswordPage() {
+export default function ResetPasswordPage() {
   return (
     <div className='min-h-screen flex'>
       {/* Left - Form Section */}
@@ -19,7 +19,7 @@ export default function ForgotPasswordPage() {
           />
         </div>
 
-        <ForgotPasswordForm />
+        <ResetPasswordForm />
       </div>
 
       <div className='hidden lg:flex lg:basis-[40%] xl:basis-[46%] shrink-0'>

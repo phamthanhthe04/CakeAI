@@ -6,15 +6,15 @@ import { OptimizedImage } from '@/components/ui/optimized-image';
 
 export default function LoginPage() {
   return (
-    <div className='min-h-screen grid lg:grid-cols-2'>
+    <div className='min-h-screen flex'>
       {/* Left - Form Section */}
-      <div className='flex flex-col bg-white'>
+      <div className='flex-1 min-w-0 flex flex-col bg-white'>
         {/* Logo */}
-        <div className='mb-8 lg:justify-start lg:ml-3 py-4'>
+        <div className='flex justify-center lg:ml-3 lg:justify-start'>
           <OptimizedImage
             imageKey='logo'
-            maxWidth='189px'
-            maxHeight='80px'
+            containerClassName='h-[80px] w-[189px]'
+            className='h-full w-full object-contain'
             rounded='none'
           />
         </div>
@@ -24,7 +24,9 @@ export default function LoginPage() {
       </div>
 
       {/* Right - Banner Section */}
-      <LoginBanner />
+      <div className='hidden lg:flex lg:basis-[40%] xl:basis-[46%] shrink-0'>
+        <LoginBanner />
+      </div>
     </div>
   );
 }

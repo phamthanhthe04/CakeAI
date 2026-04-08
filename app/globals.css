@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@import 'antd/dist/reset.css';
 
 *,
 *::before,
@@ -47,6 +46,7 @@ body {
     hsl(0, 0%, 100%),
     hsl(180, 15%, 98%)
   );
+  --ant-blue-4: #69b1ff;
 }
 @theme {
   --font-sans: var(--font-inter);
@@ -58,9 +58,10 @@ body {
   --color-muted-foreground: hsl(var(--muted-foreground));
   --color-foreground1: hsl(var(--foreground1));
   --color-muted: hsl(var(--muted));
-  --color-primary: hsl(var(--primary));
+  --color-primary: hsl(var(--primary)) !important;
   --color-secondary: hsl(var(--secondary));
   --color-background1: hsl(var(--background1));
+  --color-blue-4: hsl(var(--ant-blue-4));
 }
 
 .shadow-card {
@@ -89,16 +90,45 @@ body {
   }
 
   /* Ant Design Input Hover */
-  .ant-input:hover,
-  .ant-input-number:hover,
-  .ant-input-affix-wrapper:hover {
+  .ant-input:hover:not(.ant-input-status-error),
+  .ant-input-number:hover:not(.ant-input-number-status-error),
+  .ant-input-affix-wrapper:hover:not(.ant-input-status-error) {
     border-color: hsl(var(--accent)) !important;
   }
 
   /* Ant Design Input Password Hover */
-  .ant-input-password:hover .ant-input,
-  .ant-input-password .ant-input:hover {
+  .ant-input-password:hover:not(.ant-input-status-error) .ant-input,
+  .ant-input-password .ant-input:hover:not(.ant-input-status-error) {
     border-color: hsl(var(--accent)) !important;
+  }
+
+  /* Ant Design Input Password Focus */
+  .ant-input-password:focus:not(.ant-input-status-error) {
+    border-color: hsl(var(--accent)) !important;
+    box-shadow: 0 0 0 2px hsl(var(--accent) / 0.2) !important;
+  }
+
+  /* Ant Design Error Focus - Keep default red behavior */
+  .ant-form-item-has-error .ant-input,
+  .ant-form-item-has-error .ant-input-affix-wrapper,
+  .ant-input-affix-wrapper.ant-input-status-error,
+  .ant-input.ant-input-status-error {
+    border-color: #ff4d4f !important;
+  }
+
+  /* Forgot Password Link */
+  .forgot-password-link {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .forgot-password-link a {
+    color: hsl(var(--primary)) !important;
+    transition: color 0.3s ease;
+  }
+
+  .forgot-password-link a:hover {
+    color: #69b1ff !important;
   }
 
   /* Form centered */
@@ -114,4 +144,31 @@ body {
     width: 100%;
     margin-bottom: 16px;
   }
+}
+
+.route-top-loader-wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.route-top-loader-wrap.is-active {
+  opacity: 1;
+}
+
+.route-top-loader {
+  height: 3px;
+  width: 0;
+  background: linear-gradient(
+    90deg,
+    var(--CakeAI-liner-gradient-start-primary-color),
+    var(--CakeAI-liner-gradient-end-primary-color)
+  );
+  transition: width 0.2s ease;
+  box-shadow: 0 0 8px rgba(2, 150, 151, 0.55);
 }

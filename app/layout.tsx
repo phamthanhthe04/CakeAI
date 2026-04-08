@@ -1,39 +1,42 @@
-import type { Metadata } from 'next';
-import { siteConfig } from '@/lib/constants/site';
+// app/layout.tsx
 import { Inter } from 'next/font/google';
+import { AntdRegistry } from '@ant-design/nextjs-registry';
+import { ConfigProvider } from 'antd';
+import RouteTopLoader from '@/components/layout/route-top-loader';
 import './globals.css';
 
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
+  display: 'swap',
 });
-
-export const metadata: Metadata = {
-  title: siteConfig.name,
-  description: siteConfig.description,
-};
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang='vi' className={`${inter.variable} h-full antialiased`}>
-      <body className='relative h-screen overflow-hidden font-sans text-foreground1'>
-        <div className='pointer-events-none fixed inset-0 z-0' />
-        <div
-          className='absolute w-full -z-10 inset-0'
-          style={{
-            maxHeight: '400px',
-            height: '400px',
-            background:
-              'linear-gradient(180deg, rgba(1, 157, 138, 0.25) 0%, rgba(5, 118, 203, 0.15) 40%, rgba(5, 118, 203, 0) 100%)',
-          }}
-        />
-        <div className='relative z-20 flex h-full min-h-0 flex-col'>
-          {children}
-        </div>
+    <html lang='en' className={inter.variable}>
+      <body>
+        <RouteTopLoader />
+        <AntdRegistry>
+          <ConfigProvider
+            theme={{
+              token: {
+                // Áp dụng font Inter cho toàn bộ hệ thống Antd
+                fontFamily: `var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial`,
+
+                // (Tùy chọn) Đảm bảo font-size và các thông số khác đồng bộ
+                fontSize: 14,
+                borderRadius: 6,
+                colorLink: '#551A8B',
+              },
+            }}
+          >
+            {children}
+          </ConfigProvider>
+        </AntdRegistry>
       </body>
     </html>
   );
