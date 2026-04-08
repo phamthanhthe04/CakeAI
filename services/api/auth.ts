@@ -62,7 +62,7 @@ export async function register(payload: RegisterRequest) {
 
 export async function resetPassword(payload: ResetPasswordRequest) {
   const response = await apiClient<ResetPasswordResponse>(
-    buildApiUrl('/api/v1/auth/reset-password'),
+    buildApiUrl('/api/v1/auth/set-password'),
     {
       method: 'POST',
       body: JSON.stringify(payload),

@@ -22,7 +22,7 @@ export default function ForgotPasswordPage() {
         <ForgotPasswordForm />
       </div>
 
-      <div className='hidden lg:flex lg:basis-[40%] xl:basis-[46%] shrink-0'>
+      <div className='hidden lg:flex lg:basis-[40%] xl:basis-[46%] shrink-0 self-stretch'>
         <RegisterBanner />
       </div>
     </div>

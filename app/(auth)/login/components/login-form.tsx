@@ -12,6 +12,12 @@ import { env } from '@/config/env';
 
 type GoogleTokenResponse = {
   access_token?: string;
+  error?: string;
+  error_description?: string;
+};
+
+type GoogleErrorResponse = {
+  type?: string;
 };
 
 type GoogleTokenClient = {
@@ -27,12 +33,20 @@ declare global {
             client_id: string;
             scope: string;
             callback: (response: GoogleTokenResponse) => void;
-            error_callback?: () => void;
+            error_callback?: (error: GoogleErrorResponse) => void;
           }) => GoogleTokenClient;
         };
       };
     };
   }
+}
+
+function isGoogleAuthCancelled(response: GoogleTokenResponse): boolean {
+  return response.error === 'access_denied';
+}
+
+function isGooglePopupClosed(error: GoogleErrorResponse): boolean {
+  return error.type === 'popup_closed';
 }
 
 export default function LoginForm() {
@@ -118,6 +132,11 @@ export default function LoginForm() {
 
         if (!googleToken) {
           setIsGoogleSubmitting(false);
+
+          if (isGoogleAuthCancelled(response)) {
+            return;
+          }
+
           notification.warning({
             title: 'Notification',
             description: 'Không nhận được token Google',
@@ -150,8 +169,13 @@ export default function LoginForm() {
           setIsGoogleSubmitting(false);
         }
       },
-      error_callback: () => {
+      error_callback: (error: GoogleErrorResponse) => {
         setIsGoogleSubmitting(false);
+
+        if (isGooglePopupClosed(error)) {
+          return;
+        }
+
         notification.warning({
           title: 'Notification',
           description: 'Không thể mở popup Google',

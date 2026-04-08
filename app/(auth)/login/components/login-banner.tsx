@@ -5,7 +5,7 @@ import Link from 'next/link';
 export default function LoginBanner() {
   return (
     <div
-      className='hidden lg:flex justify-center items-center text-white relative overflow-hidden h-full'
+      className='flex w-full h-full justify-center items-center text-white relative overflow-hidden'
       style={{
         background: "url('/images/images/bg-register.png')",
         backgroundSize: 'cover',
