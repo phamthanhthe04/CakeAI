@@ -2,6 +2,8 @@
 import { Inter } from 'next/font/google';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { ConfigProvider } from 'antd';
+import RouteTopLoader from '@/components/layout/route-top-loader';
+import Providers from '@/app/providers';
 import './globals.css';
 
 const inter = Inter({
@@ -17,7 +19,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en' className={inter.variable}>
-      <body>
+      <body suppressHydrationWarning>
+        <RouteTopLoader />
         <AntdRegistry>
           <ConfigProvider
             theme={{
@@ -28,10 +31,11 @@ export default function RootLayout({
                 // (Tùy chọn) Đảm bảo font-size và các thông số khác đồng bộ
                 fontSize: 14,
                 borderRadius: 6,
+                colorLink: '#551A8B',
               },
             }}
           >
-            {children}
+            <Providers>{children}</Providers>
           </ConfigProvider>
         </AntdRegistry>
       </body>

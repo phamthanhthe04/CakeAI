@@ -1,9 +1,13 @@
 'use client';
 
-import { Button, Form, Input, notification } from 'antd';
+import { App as AntdApp, Button, Form, Input } from 'antd';
 import Image from 'next/image';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
+import { resetPassword } from '@/services';
+import type { ResetPasswordRequest } from '@/types';
+import Link from 'next/link';
 
 type ResetPasswordFormValues = {
   password: string;
@@ -13,19 +17,55 @@ type ResetPasswordFormValues = {
 
 export default function ResetPasswordForm() {
   const [form] = Form.useForm<ResetPasswordFormValues>();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
   const searchParams = useSearchParams();
+  const { notification } = AntdApp.useApp();
 
-  const handleSubmit = async () => {
-    notification.success({
-      title: 'Notification',
-      description: 'Đã nhận thông tin đặt lại mật khẩu',
-      placement: 'topRight',
-    });
+  const email = searchParams.get('q') || '';
+
+  const handleSubmit = async (values: ResetPasswordFormValues) => {
+    try {
+      setIsSubmitting(true);
+
+      if (!email) {
+        notification.warning({
+          title: 'Notification',
+          description: 'Thiếu email đặt lại mật khẩu',
+          placement: 'topRight',
+        });
+        return;
+      }
+
+      const payload: ResetPasswordRequest = {
+        email,
+        password: values.password,
+        otp: values.otp,
+      };
+
+      await resetPassword(payload);
+
+      notification.success({
+        title: 'Notification',
+        description: 'Đặt lại mật khẩu thành công',
+        placement: 'topRight',
+      });
+
+      router.push('/login');
+    } catch {
+      notification.warning({
+        title: 'Notification',
+        description: 'Đặt lại mật khẩu thất bại',
+        placement: 'topRight',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className='flex flex-1 items-center justify-center'>
-      <div className='w-full max-w-md px-4'>
+      <div className='w-full px-4 lg:w-100 lg:px-0'>
         <div className='mb-6 text-center text-4xl font-medium'>
           Đặt lại mật khẩu
         </div>
@@ -98,6 +138,14 @@ export default function ResetPasswordForm() {
             <Input
               placeholder='Nhập OTP'
               style={{ borderRadius: '8px', padding: '6px 11px' }}
+              prefix={
+                <Image
+                  src='/images/images/padlock_white.webp'
+                  alt=''
+                  width={20}
+                  height={20}
+                />
+              }
             />
           </Form.Item>
 
@@ -105,6 +153,7 @@ export default function ResetPasswordForm() {
             <Button
               type='primary'
               htmlType='submit'
+              loading={isSubmitting}
               block
               style={{
                 borderRadius: 8,
@@ -121,11 +170,12 @@ export default function ResetPasswordForm() {
           </Form.Item>
         </Form>
 
-        {searchParams.get('q') ? (
-          <p className='text-xs text-muted-foreground text-center'>
-            Email xác thực: {searchParams.get('q')}
-          </p>
-        ) : null}
+        <div className='mt-3 flex items-center justify-center gap-x-1 lg:hidden'>
+          <span className='text-sm italic'>Nếu bạn đã có tài khoản?</span>
+          <Link href='/login' className='text-sm'>
+            Đăng nhập
+          </Link>
+        </div>
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import Link from 'next/link';
 export default function LoginBanner() {
   return (
     <div
-      className='hidden lg:flex justify-center items-center text-white relative overflow-hidden h-full'
+      className='flex w-full h-full justify-center items-center text-white relative overflow-hidden'
       style={{
         background: "url('/images/images/bg-register.png')",
         backgroundSize: 'cover',
@@ -51,7 +51,7 @@ export default function LoginBanner() {
                   'linear-gradient(90deg, var(--CakeAI-liner-gradient-start-primary-color) 0%, var(--CakeAI-liner-gradient-end-primary-color) 100%)',
                 padding: '10px 24px',
               }}
-              className='font-medium hover:opacity-90 transition-opacity'
+              className='font-medium'
             >
               Đăng ký ngay
             </button>

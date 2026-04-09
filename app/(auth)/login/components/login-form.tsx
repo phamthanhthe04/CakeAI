@@ -1,17 +1,23 @@
 'use client';
 
-import { Form, Input, Button, notification } from 'antd';
+import { App as AntdApp, Form, Input, Button } from 'antd';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { login, loginWithGoogle } from '@/services';
+import { useLoginMutation, useLoginWithGoogleMutation } from '@/features/auth';
 import type { LoginRequest } from '@/types';
 import { env } from '@/config/env';
 
 type GoogleTokenResponse = {
   access_token?: string;
+  error?: string;
+  error_description?: string;
+};
+
+type GoogleErrorResponse = {
+  type?: string;
 };
 
 type GoogleTokenClient = {
@@ -27,7 +33,7 @@ declare global {
             client_id: string;
             scope: string;
             callback: (response: GoogleTokenResponse) => void;
-            error_callback?: () => void;
+            error_callback?: (error: GoogleErrorResponse) => void;
           }) => GoogleTokenClient;
         };
       };
@@ -35,12 +41,22 @@ declare global {
   }
 }
 
+function isGoogleAuthCancelled(response: GoogleTokenResponse): boolean {
+  return response.error === 'access_denied';
+}
+
+function isGooglePopupClosed(error: GoogleErrorResponse): boolean {
+  return error.type === 'popup_closed';
+}
+
 export default function LoginForm() {
   const [form] = Form.useForm();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
   const [isGoogleReady, setIsGoogleReady] = useState(false);
+  const [loginMutation, { isLoading: isSubmitting }] = useLoginMutation();
+  const [loginWithGoogleMutation] = useLoginWithGoogleMutation();
   const router = useRouter();
+  const { notification } = AntdApp.useApp();
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -68,9 +84,7 @@ export default function LoginForm() {
 
   const handleSubmit = async (values: LoginRequest) => {
     try {
-      setIsSubmitting(true);
-
-      const loginData = await login(values);
+      const loginData = await loginMutation(values).unwrap();
 
       if (typeof window !== 'undefined') {
         localStorage.setItem('accessToken', loginData.accessToken);
@@ -83,8 +97,6 @@ export default function LoginForm() {
         description: 'Tài khoản hoặc mật khẩu không chính xác',
         placement: 'topRight',
       });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -117,6 +129,11 @@ export default function LoginForm() {
 
         if (!googleToken) {
           setIsGoogleSubmitting(false);
+
+          if (isGoogleAuthCancelled(response)) {
+            return;
+          }
+
           notification.warning({
             title: 'Notification',
             description: 'Không nhận được token Google',
@@ -126,10 +143,10 @@ export default function LoginForm() {
         }
 
         try {
-          const loginData = await loginWithGoogle({
+          const loginData = await loginWithGoogleMutation({
             token: googleToken,
             agentCode: null,
-          });
+          }).unwrap();
 
           if (typeof window !== 'undefined') {
             localStorage.setItem(
@@ -149,8 +166,13 @@ export default function LoginForm() {
           setIsGoogleSubmitting(false);
         }
       },
-      error_callback: () => {
+      error_callback: (error: GoogleErrorResponse) => {
         setIsGoogleSubmitting(false);
+
+        if (isGooglePopupClosed(error)) {
+          return;
+        }
+
         notification.warning({
           title: 'Notification',
           description: 'Không thể mở popup Google',
@@ -164,7 +186,7 @@ export default function LoginForm() {
 
   return (
     <div className='flex-1 flex justify-center items-center'>
-      <div className='w-full max-w-md px-4'>
+      <div className='w-full px-4 lg:w-100 lg:px-0'>
         {/* Title */}
         <div className='text-center font-medium text-2xl mb-3 lg:mb-6'>
           Đăng nhập
@@ -215,7 +237,7 @@ export default function LoginForm() {
                 />
               }
               iconRender={(visible) =>
-                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
               }
               className='hover:border-accent transition-colors'
               style={{
@@ -263,7 +285,7 @@ export default function LoginForm() {
             type='button'
             onClick={handleGoogleLogin}
             disabled={isGoogleSubmitting}
-            className='w-full flex items-center justify-center gap-x-2 h-9 cursor-pointer bg-[linear-gradient(90deg,var(--CakeAI-liner-gradient-start-primary-color),var(--CakeAI-liner-gradient-end-primary-color))] rounded-lg hover:opacity-90 transition-opacity disabled:opacity-70 disabled:cursor-not-allowed'
+            className='w-full flex items-center justify-center gap-x-2 h-9 cursor-pointer bg-[linear-gradient(90deg,var(--CakeAI-liner-gradient-start-primary-color),var(--CakeAI-liner-gradient-end-primary-color))] rounded-lg transition-opacity disabled:opacity-70 disabled:cursor-not-allowed'
           >
             <div className='bg-white flex justify-center items-center rounded-md w-7 h-7'>
               <Image
@@ -282,10 +304,7 @@ export default function LoginForm() {
         {/* Register */}
         <div className='flex items-center justify-center gap-x-1 mt-3 lg:hidden'>
           <span className='italic text-sm'>Nếu bạn chưa có tài khoản?</span>
-          <Link
-            href='/register'
-            className='hover:text-accent/80 font-semibold text-sm'
-          >
+          <Link href='/register' className='text-sm'>
             Đăng ký
           </Link>
         </div>

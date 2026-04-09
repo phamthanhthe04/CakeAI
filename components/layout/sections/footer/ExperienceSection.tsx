@@ -35,7 +35,7 @@ export function ExperienceSection() {
       </div>
 
       <div
-        className='container mx-auto px-4 relative z-10 bg-[#1c4a4a]'
+        className='mx-auto px-4 relative z-10 bg-[#1c4a4a]'
         style={{
           padding: '3rem 2rem',
         }}

@@ -20,9 +20,6 @@ export default function MainLayout({
             'linear-gradient(180deg, rgba(1, 157, 138, 0.25) 0%, rgba(5, 118, 203, 0.15) 40%, rgba(5, 118, 203, 0) 100%)',
         }}
       />
-      <div className='fixed bottom-2 right-2 z-60 rounded bg-black/70 px-2 py-1 text-xs text-white'>
-        MAIN_LAYOUT_ACTIVE
-      </div>
       <div className='relative z-20 flex h-full min-h-0 flex-col'>
         <div data-testid='main-header-mounted'>
           <Header />

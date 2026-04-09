@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form, Input, notification } from 'antd';
+import { App as AntdApp, Button, Form, Input } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -47,6 +47,7 @@ export default function RegisterForm() {
   const [form] = Form.useForm();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
+  const { notification } = AntdApp.useApp();
 
   const handleSubmit = async (values: {
     name: string;
@@ -89,7 +90,7 @@ export default function RegisterForm() {
 
   return (
     <div className='flex flex-1 items-center justify-center'>
-      <div className='w-full max-w-md px-4'>
+      <div className='w-full px-4 lg:w-100 lg:px-0'>
         <div className='mb-3 text-center text-2xl font-medium lg:mb-6'>
           Đăng ký
         </div>
@@ -227,8 +228,8 @@ export default function RegisterForm() {
           </Form.Item>
         </Form>
         {/* Login Google */}
-        <div className='mt-3 '>
-          <div className='flex items-center justify-center gap-x-2 h-9 cursor-pointer bg-[linear-gradient(90deg,var(--CakeAI-liner-gradient-start-primary-color),var(--CakeAI-liner-gradient-end-primary-color))] rounded-lg hover:opacity-90 transition-opacity'>
+        <div className=''>
+          <div className='flex items-center justify-center gap-x-2 h-9 cursor-pointer bg-[linear-gradient(90deg,var(--CakeAI-liner-gradient-start-primary-color),var(--CakeAI-liner-gradient-end-primary-color))] rounded-lg transition-opacity'>
             <div className='bg-white flex justify-center items-center rounded-md w-7 h-7'>
               <Image
                 src='/images/images/google.e3b196e3.svg'
@@ -237,7 +238,7 @@ export default function RegisterForm() {
                 height={20}
               />
             </div>
-            <span className='text-white font-semibold'>
+            <span className='text-white font-semibold text-sm'>
               Đăng nhập bằng Google
             </span>
           </div>
@@ -245,10 +246,7 @@ export default function RegisterForm() {
 
         <div className='mt-3 flex items-center justify-center gap-x-1 lg:hidden'>
           <span className='text-sm italic'>Nếu bạn đã có tài khoản?</span>
-          <Link
-            href='/login'
-            className='font-semibold text-sm hover:text-accent/80'
-          >
+          <Link href='/login' className='text-sm'>
             Đăng nhập
           </Link>
         </div>
