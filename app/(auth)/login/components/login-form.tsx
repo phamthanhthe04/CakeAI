@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { login, loginWithGoogle } from '@/services';
+import { useLoginMutation, useLoginWithGoogleMutation } from '@/features/auth';
 import type { LoginRequest } from '@/types';
 import { env } from '@/config/env';
 
@@ -51,9 +51,10 @@ function isGooglePopupClosed(error: GoogleErrorResponse): boolean {
 
 export default function LoginForm() {
   const [form] = Form.useForm();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
   const [isGoogleReady, setIsGoogleReady] = useState(false);
+  const [loginMutation, { isLoading: isSubmitting }] = useLoginMutation();
+  const [loginWithGoogleMutation] = useLoginWithGoogleMutation();
   const router = useRouter();
   const { notification } = AntdApp.useApp();
 
@@ -83,9 +84,7 @@ export default function LoginForm() {
 
   const handleSubmit = async (values: LoginRequest) => {
     try {
-      setIsSubmitting(true);
-
-      const loginData = await login(values);
+      const loginData = await loginMutation(values).unwrap();
 
       if (typeof window !== 'undefined') {
         localStorage.setItem('accessToken', loginData.accessToken);
@@ -98,8 +97,6 @@ export default function LoginForm() {
         description: 'Tài khoản hoặc mật khẩu không chính xác',
         placement: 'topRight',
       });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -146,10 +143,10 @@ export default function LoginForm() {
         }
 
         try {
-          const loginData = await loginWithGoogle({
+          const loginData = await loginWithGoogleMutation({
             token: googleToken,
             agentCode: null,
-          });
+          }).unwrap();
 
           if (typeof window !== 'undefined') {
             localStorage.setItem(
