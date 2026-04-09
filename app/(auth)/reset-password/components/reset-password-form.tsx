@@ -4,8 +4,7 @@ import { App as AntdApp, Button, Form, Input } from 'antd';
 import Image from 'next/image';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
-import { resetPassword } from '@/services';
+import { useResetPasswordMutation } from '@/features/auth';
 import type { ResetPasswordRequest } from '@/types';
 import Link from 'next/link';
 
@@ -17,7 +16,8 @@ type ResetPasswordFormValues = {
 
 export default function ResetPasswordForm() {
   const [form] = Form.useForm<ResetPasswordFormValues>();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [resetPasswordMutation, { isLoading: isSubmitting }] =
+    useResetPasswordMutation();
   const router = useRouter();
   const searchParams = useSearchParams();
   const { notification } = AntdApp.useApp();
@@ -26,8 +26,6 @@ export default function ResetPasswordForm() {
 
   const handleSubmit = async (values: ResetPasswordFormValues) => {
     try {
-      setIsSubmitting(true);
-
       if (!email) {
         notification.warning({
           title: 'Notification',
@@ -43,7 +41,7 @@ export default function ResetPasswordForm() {
         otp: values.otp,
       };
 
-      await resetPassword(payload);
+      await resetPasswordMutation(payload).unwrap();
 
       notification.success({
         title: 'Notification',
@@ -58,8 +56,6 @@ export default function ResetPasswordForm() {
         description: 'Đặt lại mật khẩu thất bại',
         placement: 'topRight',
       });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 

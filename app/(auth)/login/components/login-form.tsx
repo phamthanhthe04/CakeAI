@@ -84,11 +84,7 @@ export default function LoginForm() {
 
   const handleSubmit = async (values: LoginRequest) => {
     try {
-      const loginData = await loginMutation(values).unwrap();
-
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('accessToken', loginData.accessToken);
-      }
+      await loginMutation(values).unwrap();
 
       router.push('/');
     } catch {
@@ -143,17 +139,10 @@ export default function LoginForm() {
         }
 
         try {
-          const loginData = await loginWithGoogleMutation({
+          await loginWithGoogleMutation({
             token: googleToken,
             agentCode: null,
           }).unwrap();
-
-          if (typeof window !== 'undefined') {
-            localStorage.setItem(
-              'accessToken',
-              loginData.token || loginData.refreshToken || '',
-            );
-          }
 
           router.push('/');
         } catch {

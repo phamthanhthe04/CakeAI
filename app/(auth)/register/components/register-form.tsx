@@ -4,9 +4,8 @@ import { App as AntdApp, Button, Form, Input } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { register } from '@/services';
+import { useRegisterMutation } from '@/features/auth';
 import type { RegisterRequest } from '@/types';
 
 function UserIcon() {
@@ -45,7 +44,7 @@ function PhoneIcon() {
 
 export default function RegisterForm() {
   const [form] = Form.useForm();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [registerMutation, { isLoading: isSubmitting }] = useRegisterMutation();
   const router = useRouter();
   const { notification } = AntdApp.useApp();
 
@@ -57,8 +56,6 @@ export default function RegisterForm() {
     confirmPassword: string;
   }) => {
     try {
-      setIsSubmitting(true);
-
       const payload: RegisterRequest = {
         email: values.email,
         password: values.password,
@@ -67,14 +64,7 @@ export default function RegisterForm() {
         agentCode: null,
       };
 
-      const registerData = await register(payload);
-
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(
-          'accessToken',
-          registerData.token || registerData.refreshToken || '',
-        );
-      }
+      await registerMutation(payload).unwrap();
 
       router.push('/');
     } catch {
@@ -83,8 +73,6 @@ export default function RegisterForm() {
         description: 'Đăng ký thất bại, vui lòng kiểm tra lại thông tin',
         placement: 'topRight',
       });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 

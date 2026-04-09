@@ -1,9 +1,9 @@
 'use client';
 
-import { App as AntdApp, Button, Form, Input } from 'antd';
+import { App as AntdApp, Form, Input } from 'antd';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { forgotPassword } from '@/services';
+import { useForgotPasswordMutation } from '@/features/auth';
 import Link from 'antd/es/typography/Link';
 
 type ForgotPasswordFormValues = {
@@ -12,12 +12,15 @@ type ForgotPasswordFormValues = {
 
 export default function ForgotPasswordForm() {
   const [form] = Form.useForm<ForgotPasswordFormValues>();
+  const [forgotPasswordMutation, { isLoading }] = useForgotPasswordMutation();
   const router = useRouter();
   const { notification } = AntdApp.useApp();
 
   const handleSubmit = async (values: ForgotPasswordFormValues) => {
     try {
-      const result = await forgotPassword({ email: values.email });
+      const result = await forgotPasswordMutation({
+        email: values.email,
+      }).unwrap();
       const nextEmail = result?.email || values.email;
       router.push(`/reset-password?q=${encodeURIComponent(nextEmail)}`);
     } catch {
@@ -65,9 +68,10 @@ export default function ForgotPasswordForm() {
 
           <button
             type='submit'
+            disabled={isLoading}
             className='w-full flex items-center justify-center gap-x-2 h-9 cursor-pointer bg-[#029697] hover:opacity-90 rounded-lg transition-opacity disabled:opacity-70 text-white disabled:cursor-not-allowed'
           >
-            Gửi
+            {isLoading ? 'Đang xử lý...' : 'Gửi'}
           </button>
         </Form>
         <div className='mt-3 flex items-center justify-center gap-x-1 lg:hidden'>
