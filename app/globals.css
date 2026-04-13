@@ -116,6 +116,25 @@ body {
     border-color: #ff4d4f !important;
   }
 
+  /* Input có prefix/suffix (affix-wrapper) */
+  .ant-input-affix-wrapper:focus,
+  .ant-input-affix-wrapper-focused,
+  .ant-input-affix-wrapper:focus-within {
+    border-color: hsl(var(--accent)) !important;
+    box-shadow: 0 0 0 2px hsl(var(--accent) / 0.2) !important;
+  }
+
+  /* Input.Password (quan trọng) */
+  .ant-input-password:focus-within {
+    border-color: hsl(var(--accent)) !important;
+    box-shadow: 0 0 0 2px hsl(var(--accent) / 0.2) !important;
+  }
+
+  /* Đảm bảo input bên trong không override */
+  .ant-input-password .ant-input:focus {
+    box-shadow: none !important;
+  }
+
   /* Forgot Password Link */
   .forgot-password-link {
     display: flex;

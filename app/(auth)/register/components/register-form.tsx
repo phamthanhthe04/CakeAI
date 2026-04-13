@@ -4,9 +4,9 @@ import { App as AntdApp, Button, Form, Input } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { register } from '@/services';
+import { useGoogleLogin, useRegisterMutation } from '@/features/auth';
+import { getApiErrorMessage } from '@/lib/utils/api-error';
 import type { RegisterRequest } from '@/types';
 
 function UserIcon() {
@@ -45,9 +45,12 @@ function PhoneIcon() {
 
 export default function RegisterForm() {
   const [form] = Form.useForm();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [registerMutation, { isLoading: isSubmitting }] = useRegisterMutation();
   const router = useRouter();
   const { notification } = AntdApp.useApp();
+  const { isGoogleSubmitting, handleGoogleLogin } = useGoogleLogin({
+    onSuccess: () => router.push('/'),
+  });
 
   const handleSubmit = async (values: {
     name: string;
@@ -57,8 +60,6 @@ export default function RegisterForm() {
     confirmPassword: string;
   }) => {
     try {
-      setIsSubmitting(true);
-
       const payload: RegisterRequest = {
         email: values.email,
         password: values.password,
@@ -67,24 +68,18 @@ export default function RegisterForm() {
         agentCode: null,
       };
 
-      const registerData = await register(payload);
-
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(
-          'accessToken',
-          registerData.token || registerData.refreshToken || '',
-        );
-      }
+      await registerMutation(payload).unwrap();
 
       router.push('/');
-    } catch {
+    } catch (error) {
       notification.warning({
         title: 'Notification',
-        description: 'Đăng ký thất bại, vui lòng kiểm tra lại thông tin',
+        description: getApiErrorMessage(
+          error,
+          'Đăng ký thất bại, vui lòng kiểm tra lại thông tin',
+        ),
         placement: 'topRight',
       });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -229,7 +224,12 @@ export default function RegisterForm() {
         </Form>
         {/* Login Google */}
         <div className=''>
-          <div className='flex items-center justify-center gap-x-2 h-9 cursor-pointer bg-[linear-gradient(90deg,var(--CakeAI-liner-gradient-start-primary-color),var(--CakeAI-liner-gradient-end-primary-color))] rounded-lg transition-opacity'>
+          <button
+            type='button'
+            onClick={handleGoogleLogin}
+            disabled={isGoogleSubmitting}
+            className='w-full flex items-center justify-center gap-x-2 h-9 cursor-pointer bg-[linear-gradient(90deg,var(--CakeAI-liner-gradient-start-primary-color),var(--CakeAI-liner-gradient-end-primary-color))] rounded-lg transition-opacity disabled:opacity-70 disabled:cursor-not-allowed'
+          >
             <div className='bg-white flex justify-center items-center rounded-md w-7 h-7'>
               <Image
                 src='/images/images/google.e3b196e3.svg'
@@ -239,9 +239,9 @@ export default function RegisterForm() {
               />
             </div>
             <span className='text-white font-semibold text-sm'>
-              Đăng nhập bằng Google
+              {isGoogleSubmitting ? 'Đang xử lý...' : 'Đăng nhập bằng Google'}
             </span>
-          </div>
+          </button>
         </div>
 
         <div className='mt-3 flex items-center justify-center gap-x-1 lg:hidden'>

@@ -1,190 +1,38 @@
 'use client';
 
 import { App as AntdApp, Form, Input, Button } from 'antd';
-import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { login, loginWithGoogle } from '@/services';
+import { useGoogleLogin, useLoginMutation } from '@/features/auth';
+import { getApiErrorMessage } from '@/lib/utils/api-error';
 import type { LoginRequest } from '@/types';
-import { env } from '@/config/env';
-
-type GoogleTokenResponse = {
-  access_token?: string;
-  error?: string;
-  error_description?: string;
-};
-
-type GoogleErrorResponse = {
-  type?: string;
-};
-
-type GoogleTokenClient = {
-  requestAccessToken: (overrideConfig?: { prompt?: string }) => void;
-};
-
-declare global {
-  interface Window {
-    google?: {
-      accounts?: {
-        oauth2?: {
-          initTokenClient: (config: {
-            client_id: string;
-            scope: string;
-            callback: (response: GoogleTokenResponse) => void;
-            error_callback?: (error: GoogleErrorResponse) => void;
-          }) => GoogleTokenClient;
-        };
-      };
-    };
-  }
-}
-
-function isGoogleAuthCancelled(response: GoogleTokenResponse): boolean {
-  return response.error === 'access_denied';
-}
-
-function isGooglePopupClosed(error: GoogleErrorResponse): boolean {
-  return error.type === 'popup_closed';
-}
 
 export default function LoginForm() {
   const [form] = Form.useForm();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
-  const [isGoogleReady, setIsGoogleReady] = useState(false);
+  const [loginMutation, { isLoading: isSubmitting }] = useLoginMutation();
   const router = useRouter();
   const { notification } = AntdApp.useApp();
-
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    if (window.google?.accounts?.oauth2) {
-      setIsGoogleReady(true);
-      return;
-    }
-
-    const script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.async = true;
-    script.defer = true;
-    script.onload = () => setIsGoogleReady(true);
-    document.body.appendChild(script);
-
-    return () => {
-      if (script.parentNode) {
-        script.parentNode.removeChild(script);
-      }
-    };
-  }, []);
+  const { isGoogleSubmitting, handleGoogleLogin } = useGoogleLogin({
+    onSuccess: () => router.push('/'),
+  });
 
   const handleSubmit = async (values: LoginRequest) => {
     try {
-      setIsSubmitting(true);
-
-      const loginData = await login(values);
-
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('accessToken', loginData.accessToken);
-      }
+      await loginMutation(values).unwrap();
 
       router.push('/');
-    } catch {
+    } catch (error) {
       notification.warning({
         title: 'Notification',
-        description: 'Tài khoản hoặc mật khẩu không chính xác',
+        description: getApiErrorMessage(
+          error,
+          'Tài khoản hoặc mật khẩu không chính xác',
+        ),
         placement: 'topRight',
       });
-    } finally {
-      setIsSubmitting(false);
     }
-  };
-
-  const handleGoogleLogin = () => {
-    if (!env.googleClientId) {
-      notification.warning({
-        title: 'Notification',
-        description: 'Thiếu NEXT_PUBLIC_GOOGLE_CLIENT_ID để đăng nhập Google',
-        placement: 'topRight',
-      });
-      return;
-    }
-
-    if (!isGoogleReady || !window.google?.accounts?.oauth2) {
-      notification.warning({
-        title: 'Notification',
-        description: 'Google login chưa sẵn sàng, vui lòng thử lại',
-        placement: 'topRight',
-      });
-      return;
-    }
-
-    setIsGoogleSubmitting(true);
-
-    const tokenClient = window.google.accounts.oauth2.initTokenClient({
-      client_id: env.googleClientId,
-      scope: 'openid email profile',
-      callback: async (response: GoogleTokenResponse) => {
-        const googleToken = response.access_token;
-
-        if (!googleToken) {
-          setIsGoogleSubmitting(false);
-
-          if (isGoogleAuthCancelled(response)) {
-            return;
-          }
-
-          notification.warning({
-            title: 'Notification',
-            description: 'Không nhận được token Google',
-            placement: 'topRight',
-          });
-          return;
-        }
-
-        try {
-          const loginData = await loginWithGoogle({
-            token: googleToken,
-            agentCode: null,
-          });
-
-          if (typeof window !== 'undefined') {
-            localStorage.setItem(
-              'accessToken',
-              loginData.token || loginData.refreshToken || '',
-            );
-          }
-
-          router.push('/');
-        } catch {
-          notification.warning({
-            title: 'Notification',
-            description: 'Đăng nhập Google thất bại',
-            placement: 'topRight',
-          });
-        } finally {
-          setIsGoogleSubmitting(false);
-        }
-      },
-      error_callback: (error: GoogleErrorResponse) => {
-        setIsGoogleSubmitting(false);
-
-        if (isGooglePopupClosed(error)) {
-          return;
-        }
-
-        notification.warning({
-          title: 'Notification',
-          description: 'Không thể mở popup Google',
-          placement: 'topRight',
-        });
-      },
-    });
-
-    tokenClient.requestAccessToken({ prompt: 'select_account' });
   };
 
   return (
@@ -299,7 +147,7 @@ export default function LoginForm() {
               />
             </div>
             <span className='text-white text-sm font-semibold'>
-              {isGoogleSubmitting ? 'Đang xử lý...' : 'Đăng nhập bằng Google'}
+              Đăng nhập bằng google
             </span>
           </button>
         </div>
