@@ -9,8 +9,6 @@ import type {
   ForgotPasswordResponse,
   GoogleLoginRequest,
   GoogleLoginResponse,
-  LoginRequest,
-  LoginResponse,
   RegisterRequest,
   RegisterResponse,
   ResetPasswordRequest,
@@ -35,7 +33,7 @@ function shouldLogSideEffectError(error: unknown): boolean {
 
 function toAuthUser(
   user: Pick<
-    LoginResponse | GoogleLoginResponse | RegisterResponse,
+    GoogleLoginResponse | RegisterResponse,
     'id' | 'email' | 'name' | 'phone' | 'role'
   > & { avatar?: string | null },
 ): AuthUser {
@@ -52,38 +50,6 @@ function toAuthUser(
 export const authApi = baseApi.injectEndpoints({
   overrideExisting: false,
   endpoints: (builder) => ({
-    login: builder.mutation<LoginResponse, LoginRequest>({
-      query: (body) => ({
-        url: '/api/v3/auth/login',
-        method: 'POST',
-        body,
-      }),
-      transformResponse: (response: ApiResponse<LoginResponse>) =>
-        response.data,
-      // Khi login thành công, tự động lưu token và user vào Redux state
-      async onQueryStarted(_, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          const accessToken = data.accessToken ?? data.token;
-
-          if (!accessToken) {
-            throw new Error('Login response is missing access token');
-          }
-
-          dispatch(
-            setCredentials({
-              accessToken,
-              refreshToken: data.refreshToken,
-              user: toAuthUser(data),
-            }),
-          );
-        } catch (error) {
-          if (shouldLogSideEffectError(error)) {
-            console.error('Login side effect failed', error);
-          }
-        }
-      },
-    }),
     loginWithGoogle: builder.mutation<GoogleLoginResponse, GoogleLoginRequest>({
       query: (body) => ({
         url: '/api/v1/auth/login-google',
@@ -174,7 +140,6 @@ export const authApi = baseApi.injectEndpoints({
 });
 
 export const {
-  useLoginMutation,
   useLoginWithGoogleMutation,
   useForgotPasswordMutation,
   useRegisterMutation,

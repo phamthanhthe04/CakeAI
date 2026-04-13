@@ -10,9 +10,6 @@
 import {
   Badge,
   SparklesIcon,
-  BrainIcon,
-  MessageSquareIcon,
-  WorkflowIcon,
   FeatureCard,
   OptimizedImage,
   ImageIcon,

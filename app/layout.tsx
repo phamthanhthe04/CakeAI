@@ -2,6 +2,7 @@
 import { Inter } from 'next/font/google';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { ConfigProvider } from 'antd';
+import { Suspense } from 'react';
 import RouteTopLoader from '@/components/layout/route-top-loader';
 import Providers from '@/app/providers';
 import './globals.css';
@@ -20,7 +21,9 @@ export default function RootLayout({
   return (
     <html lang='en' className={inter.variable}>
       <body suppressHydrationWarning>
-        <RouteTopLoader />
+        <Suspense fallback={null}>
+          <RouteTopLoader />
+        </Suspense>
         <AntdRegistry>
           <ConfigProvider
             theme={{

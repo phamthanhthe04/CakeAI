@@ -3,7 +3,7 @@
  * Quản lý toàn bộ icon từ một nơi, type-safe
  */
 
-import { LucideCircleCheckBig, type LucideIcon } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import {
   ArrowRight,
   Bot,
