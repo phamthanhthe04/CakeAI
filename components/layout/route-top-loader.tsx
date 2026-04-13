@@ -3,6 +3,7 @@
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  ROUTE_LOADING_START_EVENT,
   startGlobalLoading,
   stopGlobalLoading,
   subscribeGlobalLoading,
@@ -41,6 +42,24 @@ export default function RouteTopLoader() {
       hideTimeoutRef.current = null;
     }
   }, []);
+
+  const beginRouteLoading = useCallback(() => {
+    if (isRoutePendingRef.current) {
+      return;
+    }
+
+    isRoutePendingRef.current = true;
+    startGlobalLoading();
+
+    clearRouteTimeout();
+    routeTimeoutRef.current = window.setTimeout(() => {
+      if (!isRoutePendingRef.current) return;
+
+      isRoutePendingRef.current = false;
+      stopGlobalLoading();
+      routeTimeoutRef.current = null;
+    }, LOADER_FALLBACK_TIMEOUT);
+  }, [clearRouteTimeout]);
 
   const startVisualLoading = useCallback(() => {
     clearHideTimeout();
@@ -122,21 +141,7 @@ export default function RouteTopLoader() {
 
       if (current === next) return;
 
-      if (isRoutePendingRef.current) {
-        return;
-      }
-
-      isRoutePendingRef.current = true;
-      startGlobalLoading();
-
-      clearRouteTimeout();
-      routeTimeoutRef.current = window.setTimeout(() => {
-        if (!isRoutePendingRef.current) return;
-
-        isRoutePendingRef.current = false;
-        stopGlobalLoading();
-        routeTimeoutRef.current = null;
-      }, LOADER_FALLBACK_TIMEOUT);
+      beginRouteLoading();
     };
 
     document.addEventListener('click', handleDocumentClick, true);
@@ -144,7 +149,25 @@ export default function RouteTopLoader() {
     return () => {
       document.removeEventListener('click', handleDocumentClick, true);
     };
-  }, [clearRouteTimeout]);
+  }, [beginRouteLoading]);
+
+  useEffect(() => {
+    const handleProgrammaticRouteStart = () => {
+      beginRouteLoading();
+    };
+
+    window.addEventListener(
+      ROUTE_LOADING_START_EVENT,
+      handleProgrammaticRouteStart,
+    );
+
+    return () => {
+      window.removeEventListener(
+        ROUTE_LOADING_START_EVENT,
+        handleProgrammaticRouteStart,
+      );
+    };
+  }, [beginRouteLoading]);
 
   useEffect(() => {
     if (isFirstRenderRef.current) {
