@@ -5,13 +5,19 @@ import Image from 'next/image';
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useGoogleLogin, useLoginMutation } from '@/features/auth';
+import {
+  loginWithPassword,
+  selectIsLoginSubmitting,
+  useGoogleLogin,
+} from '@/features/auth';
 import { getApiErrorMessage } from '@/lib/utils/api-error';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import type { LoginRequest } from '@/types';
 
 export default function LoginForm() {
   const [form] = Form.useForm();
-  const [loginMutation, { isLoading: isSubmitting }] = useLoginMutation();
+  const dispatch = useAppDispatch();
+  const isSubmitting = useAppSelector(selectIsLoginSubmitting);
   const router = useRouter();
   const { notification } = AntdApp.useApp();
   const { isGoogleSubmitting, handleGoogleLogin } = useGoogleLogin({
@@ -20,7 +26,7 @@ export default function LoginForm() {
 
   const handleSubmit = async (values: LoginRequest) => {
     try {
-      await loginMutation(values).unwrap();
+      await dispatch(loginWithPassword(values)).unwrap();
 
       router.push('/');
     } catch (error) {
