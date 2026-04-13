@@ -3,6 +3,7 @@ import type {
   ButtonHTMLAttributes,
   ReactNode,
 } from 'react';
+import Link from 'next/link';
 
 import { cn } from '@/lib/utils/cn';
 
@@ -108,14 +109,14 @@ export function BaseButton({
     const { href, style, ...anchorProps } = rest;
 
     return (
-      <a
+      <Link
         href={href}
         className={mergedClassName}
         style={{ ...primaryBackgroundStyle, ...(style ?? {}) }}
         {...anchorProps}
       >
         {content}
-      </a>
+      </Link>
     );
   }
 
