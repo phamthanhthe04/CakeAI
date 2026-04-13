@@ -2,9 +2,10 @@
 
 import { App as AntdApp, Form, Input } from 'antd';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForgotPasswordMutation } from '@/features/auth';
-import Link from 'antd/es/typography/Link';
+import { getApiErrorMessage } from '@/lib/utils/api-error';
 
 type ForgotPasswordFormValues = {
   email: string;
@@ -23,10 +24,13 @@ export default function ForgotPasswordForm() {
       }).unwrap();
       const nextEmail = result?.email || values.email;
       router.push(`/reset-password?q=${encodeURIComponent(nextEmail)}`);
-    } catch {
+    } catch (error) {
       notification.warning({
         title: 'Notification',
-        description: 'Email không tồn tại trong hệ thống',
+        description: getApiErrorMessage(
+          error,
+          'Email không tồn tại trong hệ thống',
+        ),
         placement: 'topRight',
       });
     }

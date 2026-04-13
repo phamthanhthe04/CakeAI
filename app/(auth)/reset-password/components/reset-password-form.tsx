@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useResetPasswordMutation } from '@/features/auth';
+import { getApiErrorMessage } from '@/lib/utils/api-error';
 import type { ResetPasswordRequest } from '@/types';
 import Link from 'next/link';
 
@@ -50,10 +51,10 @@ export default function ResetPasswordForm() {
       });
 
       router.push('/login');
-    } catch {
+    } catch (error) {
       notification.warning({
         title: 'Notification',
-        description: 'Đặt lại mật khẩu thất bại',
+        description: getApiErrorMessage(error, 'Đặt lại mật khẩu thất bại'),
         placement: 'topRight',
       });
     }

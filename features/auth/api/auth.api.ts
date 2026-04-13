@@ -1,5 +1,8 @@
 import { baseApi } from '@/store/base-api';
-import { setCredentials, type AuthUser } from '@/features/auth';
+import {
+  setCredentials,
+  type AuthUser,
+} from '@/features/auth/model/auth.slice';
 import type {
   ApiResponse,
   ForgotPasswordRequest,
@@ -13,6 +16,22 @@ import type {
   ResetPasswordRequest,
   ResetPasswordResponse,
 } from '@/types';
+
+type RtkQuerySideEffectError = {
+  error?: {
+    status?: number;
+  };
+};
+
+function shouldLogSideEffectError(error: unknown): boolean {
+  const status = (error as RtkQuerySideEffectError)?.error?.status;
+
+  if (typeof status === 'number' && status >= 400 && status < 500) {
+    return false;
+  }
+
+  return true;
+}
 
 function toAuthUser(
   user: Pick<
@@ -30,21 +49,8 @@ function toAuthUser(
   };
 }
 
-function persistAuthTokens(accessToken: string, refreshToken?: string | null) {
-  if (typeof window === 'undefined') {
-    return;
-  }
-
-  localStorage.setItem('accessToken', accessToken);
-
-  if (refreshToken) {
-    localStorage.setItem('refreshToken', refreshToken);
-  } else {
-    localStorage.removeItem('refreshToken');
-  }
-}
-
 export const authApi = baseApi.injectEndpoints({
+  overrideExisting: false,
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, LoginRequest>({
       query: (body) => ({
@@ -54,6 +60,7 @@ export const authApi = baseApi.injectEndpoints({
       }),
       transformResponse: (response: ApiResponse<LoginResponse>) =>
         response.data,
+      // Khi login thành công, tự động lưu token và user vào Redux state
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
@@ -65,10 +72,10 @@ export const authApi = baseApi.injectEndpoints({
               user: toAuthUser(data),
             }),
           );
-
-          persistAuthTokens(data.accessToken, data.refreshToken);
-        } catch {
-          // noop
+        } catch (error) {
+          if (shouldLogSideEffectError(error)) {
+            console.error('Login side effect failed', error);
+          }
         }
       },
     }),
@@ -83,10 +90,10 @@ export const authApi = baseApi.injectEndpoints({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          const accessToken = data.token || data.refreshToken;
+          const accessToken = data.token;
 
           if (!accessToken) {
-            return;
+            throw new Error('Google response is missing access token');
           }
 
           dispatch(
@@ -96,10 +103,10 @@ export const authApi = baseApi.injectEndpoints({
               user: toAuthUser(data),
             }),
           );
-
-          persistAuthTokens(accessToken, data.refreshToken);
-        } catch {
-          // noop
+        } catch (error) {
+          if (shouldLogSideEffectError(error)) {
+            console.error('Google login side effect failed', error);
+          }
         }
       },
     }),
@@ -126,10 +133,10 @@ export const authApi = baseApi.injectEndpoints({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          const accessToken = data.token || data.refreshToken;
+          const accessToken = data.token;
 
           if (!accessToken) {
-            return;
+            throw new Error('Register response is missing access token');
           }
 
           dispatch(
@@ -139,10 +146,10 @@ export const authApi = baseApi.injectEndpoints({
               user: toAuthUser(data),
             }),
           );
-
-          persistAuthTokens(accessToken, data.refreshToken);
-        } catch {
-          // noop
+        } catch (error) {
+          if (shouldLogSideEffectError(error)) {
+            console.error('Register side effect failed', error);
+          }
         }
       },
     }),
