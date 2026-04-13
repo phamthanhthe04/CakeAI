@@ -3,7 +3,6 @@ import {
   createSlice,
   type PayloadAction,
 } from '@reduxjs/toolkit';
-import { env } from '@/config/env';
 import type { RootState } from '@/store/index';
 import type { ApiResponse, LoginRequest, LoginResponse } from '@/types';
 
@@ -17,14 +16,10 @@ export type AuthUser = {
 };
 
 export type SetCredentialsPayload = {
-  accessToken: string;
-  refreshToken?: string | null;
   user: AuthUser;
 };
 
 type AuthState = {
-  accessToken: string | null;
-  refreshToken: string | null;
   user: AuthUser | null;
   isAuthenticated: boolean;
   loginStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
@@ -32,23 +27,11 @@ type AuthState = {
 };
 
 const initialState: AuthState = {
-  accessToken: null,
-  refreshToken: null,
   user: null,
   isAuthenticated: false,
   loginStatus: 'idle',
   loginError: null,
 };
-
-function buildApiUrl(path: string): string {
-  const base = env.apiBaseUrl?.trim();
-
-  if (!base) {
-    return path;
-  }
-
-  return `${base.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
-}
 
 function toAuthUser(data: LoginResponse): AuthUser {
   return {
@@ -61,17 +44,13 @@ function toAuthUser(data: LoginResponse): AuthUser {
   };
 }
 
-function resolveAccessToken(data: LoginResponse): string | null {
-  return data.accessToken ?? data.token ?? null;
-}
-
 export const loginWithPassword = createAsyncThunk<
   SetCredentialsPayload,
   LoginRequest,
   { rejectValue: string }
 >('auth/loginWithPassword', async (payload, { rejectWithValue }) => {
   try {
-    const response = await fetch(buildApiUrl('/api/v3/auth/login'), {
+    const response = await fetch('/api/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -95,15 +74,7 @@ export const loginWithPassword = createAsyncThunk<
       return rejectWithValue('Không nhận được dữ liệu đăng nhập từ hệ thống');
     }
 
-    const accessToken = resolveAccessToken(json.data);
-
-    if (!accessToken) {
-      return rejectWithValue('Không nhận được access token từ hệ thống');
-    }
-
     return {
-      accessToken,
-      refreshToken: json.data.refreshToken,
       user: toAuthUser(json.data),
     };
   } catch {
@@ -116,8 +87,6 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setCredentials: (state, action: PayloadAction<SetCredentialsPayload>) => {
-      state.accessToken = action.payload.accessToken;
-      state.refreshToken = action.payload.refreshToken ?? null;
       state.user = action.payload.user;
       state.isAuthenticated = true;
     },
@@ -132,8 +101,6 @@ const authSlice = createSlice({
       .addCase(loginWithPassword.fulfilled, (state, action) => {
         state.loginStatus = 'succeeded';
         state.loginError = null;
-        state.accessToken = action.payload.accessToken;
-        state.refreshToken = action.payload.refreshToken ?? null;
         state.user = action.payload.user;
         state.isAuthenticated = true;
       })
@@ -151,7 +118,6 @@ export const selectAuth = (state: RootState) => state.auth;
 export const selectIsAuthenticated = (state: RootState) =>
   state.auth.isAuthenticated;
 export const selectCurrentUser = (state: RootState) => state.auth.user;
-export const selectAccessToken = (state: RootState) => state.auth.accessToken;
 export const selectLoginStatus = (state: RootState) => state.auth.loginStatus;
 export const selectLoginError = (state: RootState) => state.auth.loginError;
 export const selectIsLoginSubmitting = (state: RootState) =>
