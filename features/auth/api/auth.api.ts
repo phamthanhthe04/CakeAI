@@ -64,10 +64,15 @@ export const authApi = baseApi.injectEndpoints({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
+          const accessToken = data.accessToken ?? data.token;
+
+          if (!accessToken) {
+            throw new Error('Login response is missing access token');
+          }
 
           dispatch(
             setCredentials({
-              accessToken: data.accessToken,
+              accessToken,
               refreshToken: data.refreshToken,
               user: toAuthUser(data),
             }),

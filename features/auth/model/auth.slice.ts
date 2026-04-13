@@ -61,6 +61,10 @@ function toAuthUser(data: LoginResponse): AuthUser {
   };
 }
 
+function resolveAccessToken(data: LoginResponse): string | null {
+  return data.accessToken ?? data.token ?? null;
+}
+
 export const loginWithPassword = createAsyncThunk<
   SetCredentialsPayload,
   LoginRequest,
@@ -87,12 +91,18 @@ export const loginWithPassword = createAsyncThunk<
       return rejectWithValue(json.message);
     }
 
-    if (!json.data?.accessToken) {
+    if (!json.data) {
+      return rejectWithValue('Không nhận được dữ liệu đăng nhập từ hệ thống');
+    }
+
+    const accessToken = resolveAccessToken(json.data);
+
+    if (!accessToken) {
       return rejectWithValue('Không nhận được access token từ hệ thống');
     }
 
     return {
-      accessToken: json.data.accessToken,
+      accessToken,
       refreshToken: json.data.refreshToken,
       user: toAuthUser(json.data),
     };
