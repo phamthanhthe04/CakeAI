@@ -19,7 +19,6 @@ import {
   SettingsIcon,
   IconWrapper,
 } from '@/components';
-import { useInView } from '@/hooks/useInView';
 import { ScrollReveal } from '@/components/ScrollReveal';
 
 const features = [

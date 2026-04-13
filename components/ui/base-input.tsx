@@ -2,7 +2,6 @@
 
 import { ReactNode, InputHTMLAttributes, forwardRef } from 'react';
 import Image from 'next/image';
-import { cn } from '@/lib/utils/cn';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   /** Icon/component/ảnh bên trái */

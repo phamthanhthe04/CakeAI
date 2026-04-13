@@ -16,7 +16,8 @@ export type LoginUser = {
   phone?: string | null;
   avatar?: string | null;
   role?: number;
-  accessToken: string;
+  accessToken?: string;
+  token?: string;
   refreshToken?: string;
 };
 

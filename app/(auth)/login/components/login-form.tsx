@@ -5,23 +5,32 @@ import Image from 'next/image';
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useGoogleLogin, useLoginMutation } from '@/features/auth';
+import { loginWithPassword, useGoogleLogin } from '@/features/auth';
 import { getApiErrorMessage } from '@/lib/utils/api-error';
+import { startRouteLoading } from '@/lib/utils/top-loader';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import type { LoginRequest } from '@/types';
 
 export default function LoginForm() {
   const [form] = Form.useForm();
-  const [loginMutation, { isLoading: isSubmitting }] = useLoginMutation();
+  const dispatch = useAppDispatch();
+  const isSubmitting = useAppSelector(
+    (state) => state.auth.loginStatus === 'loading',
+  );
   const router = useRouter();
   const { notification } = AntdApp.useApp();
   const { isGoogleSubmitting, handleGoogleLogin } = useGoogleLogin({
-    onSuccess: () => router.push('/'),
+    onSuccess: () => {
+      startRouteLoading();
+      router.push('/');
+    },
   });
 
   const handleSubmit = async (values: LoginRequest) => {
     try {
-      await loginMutation(values).unwrap();
+      await dispatch(loginWithPassword(values)).unwrap();
 
+      startRouteLoading();
       router.push('/');
     } catch (error) {
       notification.warning({

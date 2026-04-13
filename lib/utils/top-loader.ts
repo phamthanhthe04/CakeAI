@@ -1,5 +1,7 @@
 type LoadingListener = (pendingCount: number) => void;
 
+export const ROUTE_LOADING_START_EVENT = 'cakeai:route-loading-start';
+
 let pendingCount = 0;
 const listeners = new Set<LoadingListener>();
 
@@ -26,4 +28,12 @@ export function subscribeGlobalLoading(listener: LoadingListener) {
   return () => {
     listeners.delete(listener);
   };
+}
+
+export function startRouteLoading() {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  window.dispatchEvent(new Event(ROUTE_LOADING_START_EVENT));
 }
