@@ -35,7 +35,7 @@ export type GoogleLoginUser = {
   role?: number;
   phone?: string | null;
   avatar?: string | null;
-  token: string;
+  token?: string;
   refreshToken?: string;
 };
 
@@ -65,7 +65,7 @@ export type RegisterResponse = {
   name: string;
   phone?: string | null;
   role?: number;
-  token: string;
+  token?: string;
   refreshToken?: string;
 };
 

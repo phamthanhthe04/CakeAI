@@ -2,11 +2,11 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { FetchArgs } from '@reduxjs/toolkit/query';
 import { env } from '@/config/env';
 import { startGlobalLoading, stopGlobalLoading } from '@/lib/utils/top-loader';
-import type { RootState } from '@/store/index';
 
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: env.apiBaseUrl?.trim() || '',
-  prepareHeaders: (headers, { getState, arg }) => {
+  credentials: 'include',
+  prepareHeaders: (headers, { arg }) => {
     const fetchArgs = arg as FetchArgs | string;
     const body = typeof fetchArgs === 'string' ? undefined : fetchArgs?.body;
     const hasFormDataBody =
@@ -14,13 +14,6 @@ const rawBaseQuery = fetchBaseQuery({
 
     if (!hasFormDataBody && !headers.has('Content-Type')) {
       headers.set('Content-Type', 'application/json');
-    }
-
-    const state = getState() as RootState;
-    const token = state.auth.accessToken;
-
-    if (token) {
-      headers.set('Authorization', `Bearer ${token}`);
     }
 
     return headers;

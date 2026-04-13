@@ -52,7 +52,7 @@ export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     loginWithGoogle: builder.mutation<GoogleLoginResponse, GoogleLoginRequest>({
       query: (body) => ({
-        url: '/api/v1/auth/login-google',
+        url: '/api/auth/login-google',
         method: 'POST',
         body,
       }),
@@ -61,16 +61,9 @@ export const authApi = baseApi.injectEndpoints({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          const accessToken = data.token;
-
-          if (!accessToken) {
-            throw new Error('Google response is missing access token');
-          }
 
           dispatch(
             setCredentials({
-              accessToken,
-              refreshToken: data.refreshToken,
               user: toAuthUser(data),
             }),
           );
@@ -95,7 +88,7 @@ export const authApi = baseApi.injectEndpoints({
     }),
     register: builder.mutation<RegisterResponse, RegisterRequest>({
       query: (body) => ({
-        url: '/api/v1/auth/register',
+        url: '/api/auth/register',
         method: 'POST',
         body,
       }),
@@ -104,16 +97,9 @@ export const authApi = baseApi.injectEndpoints({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          const accessToken = data.token;
-
-          if (!accessToken) {
-            throw new Error('Register response is missing access token');
-          }
 
           dispatch(
             setCredentials({
-              accessToken,
-              refreshToken: data.refreshToken,
               user: toAuthUser(data),
             }),
           );
