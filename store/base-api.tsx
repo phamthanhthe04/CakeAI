@@ -1,10 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { FetchArgs } from '@reduxjs/toolkit/query';
-import { env } from '@/config/env';
 import { startGlobalLoading, stopGlobalLoading } from '@/lib/utils/top-loader';
 
 const rawBaseQuery = fetchBaseQuery({
-  baseUrl: env.apiBaseUrl?.trim() || '',
+  baseUrl: '',
   credentials: 'include',
   prepareHeaders: (headers, { arg }) => {
     const fetchArgs = arg as FetchArgs | string;
