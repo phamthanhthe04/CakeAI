@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import {
   clearLoginError,
   loginWithPassword,
+  selectIsLoginSubmitting,
   useGoogleLogin,
 } from '@/features/auth';
 import { startRouteLoading } from '@/lib/utils/top-loader';
@@ -18,9 +19,7 @@ import type { LoginRequest } from '@/types';
 export default function LoginForm() {
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
-  const isSubmitting = useAppSelector(
-    (state) => state.auth.loginStatus === true,
-  );
+  const isSubmitting = useAppSelector(selectIsLoginSubmitting);
   const loginError = useAppSelector((state) => state.auth.loginError);
   const router = useRouter();
   const { notification } = AntdApp.useApp();
@@ -31,7 +30,6 @@ export default function LoginForm() {
     },
   });
 
-  // hiển thị lỗi đăng nhập nếu có
   useEffect(() => {
     if (loginError) {
       notification.warning({
@@ -45,8 +43,6 @@ export default function LoginForm() {
 
   const handleSubmit = async (values: LoginRequest) => {
     const resultAction = await dispatch(loginWithPassword(values));
-    console.log('Login result:', resultAction); // Debug log
-
     if (loginWithPassword.fulfilled.match(resultAction)) {
       startRouteLoading();
       router.push('/');
