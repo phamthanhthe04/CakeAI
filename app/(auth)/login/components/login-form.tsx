@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import {
   clearLoginError,
   loginWithPassword,
+  selectIsAuthenticated,
   selectIsLoginSubmitting,
   useGoogleLogin,
 } from '@/features/auth';
@@ -17,18 +18,16 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import type { LoginRequest } from '@/types';
 
 export default function LoginForm() {
-  const [form] = Form.useForm();
   const dispatch = useAppDispatch();
   const isSubmitting = useAppSelector(selectIsLoginSubmitting);
   const loginError = useAppSelector((state) => state.auth.loginError);
   const router = useRouter();
   const { notification } = AntdApp.useApp();
   const { isGoogleSubmitting, handleGoogleLogin } = useGoogleLogin({
-    onSuccess: () => {
-      startRouteLoading();
-      router.push('/');
-    },
+    // Keep google hook focused on auth; redirect is centralized below.
+    onSuccess: () => {},
   });
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   useEffect(() => {
     if (loginError) {
@@ -41,12 +40,17 @@ export default function LoginForm() {
     }
   }, [dispatch, loginError, notification]);
 
-  const handleSubmit = async (values: LoginRequest) => {
-    const resultAction = await dispatch(loginWithPassword(values));
-    if (loginWithPassword.fulfilled.match(resultAction)) {
-      startRouteLoading();
-      router.push('/');
+  useEffect(() => {
+    if (!isAuthenticated) {
+      return;
     }
+
+    startRouteLoading();
+    router.push('/');
+  }, [isAuthenticated, router]);
+
+  const handleSubmit = (values: LoginRequest) => {
+    dispatch(loginWithPassword(values));
   };
 
   return (
@@ -57,12 +61,7 @@ export default function LoginForm() {
           Đăng nhập
         </div>
 
-        <Form
-          form={form}
-          layout='vertical'
-          onFinish={handleSubmit}
-          className='w-full'
-        >
+        <Form layout='vertical' onFinish={handleSubmit} className='w-full'>
           {/* Email */}
           <Form.Item
             name='email'
@@ -145,11 +144,11 @@ export default function LoginForm() {
         </Form>
 
         {/* Login Google */}
-        <div className=' '>
+        <div>
           <button
             type='button'
             onClick={handleGoogleLogin}
-            disabled={isGoogleSubmitting}
+            disabled={isGoogleSubmitting || isSubmitting}
             className='w-full flex items-center justify-center gap-x-2 h-9 cursor-pointer bg-[linear-gradient(90deg,var(--CakeAI-liner-gradient-start-primary-color),var(--CakeAI-liner-gradient-end-primary-color))] rounded-lg transition-opacity disabled:opacity-70 disabled:cursor-not-allowed'
           >
             <div className='bg-white flex justify-center items-center rounded-md w-7 h-7'>
