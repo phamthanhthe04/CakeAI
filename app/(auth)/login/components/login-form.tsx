@@ -5,8 +5,12 @@ import Image from 'next/image';
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { loginWithPassword, useGoogleLogin } from '@/features/auth';
-import { getApiErrorMessage } from '@/lib/utils/api-error';
+import { useEffect } from 'react';
+import {
+  clearLoginError,
+  loginWithPassword,
+  useGoogleLogin,
+} from '@/features/auth';
 import { startRouteLoading } from '@/lib/utils/top-loader';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import type { LoginRequest } from '@/types';
@@ -15,8 +19,9 @@ export default function LoginForm() {
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
   const isSubmitting = useAppSelector(
-    (state) => state.auth.loginStatus === 'loading',
+    (state) => state.auth.loginStatus === true,
   );
+  const loginError = useAppSelector((state) => state.auth.loginError);
   const router = useRouter();
   const { notification } = AntdApp.useApp();
   const { isGoogleSubmitting, handleGoogleLogin } = useGoogleLogin({
@@ -26,21 +31,25 @@ export default function LoginForm() {
     },
   });
 
-  const handleSubmit = async (values: LoginRequest) => {
-    try {
-      await dispatch(loginWithPassword(values)).unwrap();
-
-      startRouteLoading();
-      router.push('/');
-    } catch (error) {
+  // hiển thị lỗi đăng nhập nếu có
+  useEffect(() => {
+    if (loginError) {
       notification.warning({
         title: 'Notification',
-        description: getApiErrorMessage(
-          error,
-          'Tài khoản hoặc mật khẩu không chính xác',
-        ),
+        description: loginError,
         placement: 'topRight',
       });
+      dispatch(clearLoginError());
+    }
+  }, [dispatch, loginError, notification]);
+
+  const handleSubmit = async (values: LoginRequest) => {
+    const resultAction = await dispatch(loginWithPassword(values));
+    console.log('Login result:', resultAction); // Debug log
+
+    if (loginWithPassword.fulfilled.match(resultAction)) {
+      startRouteLoading();
+      router.push('/');
     }
   };
 

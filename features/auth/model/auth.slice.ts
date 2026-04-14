@@ -22,14 +22,14 @@ export type SetCredentialsPayload = {
 type AuthState = {
   user: AuthUser | null;
   isAuthenticated: boolean;
-  loginStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
+  loginStatus: boolean;
   loginError: string | null;
 };
 
 const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
-  loginStatus: 'idle',
+  loginStatus: false,
   loginError: null,
 };
 
@@ -90,29 +90,32 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.isAuthenticated = true;
     },
+    clearLoginError: (state) => {
+      state.loginError = null;
+    },
     logout: () => initialState,
   },
   extraReducers: (builder) => {
     builder
       .addCase(loginWithPassword.pending, (state) => {
-        state.loginStatus = 'loading';
+        state.loginStatus = true;
         state.loginError = null;
       })
       .addCase(loginWithPassword.fulfilled, (state, action) => {
-        state.loginStatus = 'succeeded';
+        state.loginStatus = false;
         state.loginError = null;
         state.user = action.payload.user;
         state.isAuthenticated = true;
       })
       .addCase(loginWithPassword.rejected, (state, action) => {
-        state.loginStatus = 'failed';
+        state.loginStatus = false;
         state.loginError =
           action.payload || 'Tài khoản hoặc mật khẩu không chính xác';
       });
   },
 });
 
-export const { setCredentials, logout } = authSlice.actions;
+export const { setCredentials, clearLoginError, logout } = authSlice.actions;
 
 export const selectAuth = (state: RootState) => state.auth;
 export const selectIsAuthenticated = (state: RootState) =>
@@ -121,6 +124,6 @@ export const selectCurrentUser = (state: RootState) => state.auth.user;
 export const selectLoginStatus = (state: RootState) => state.auth.loginStatus;
 export const selectLoginError = (state: RootState) => state.auth.loginError;
 export const selectIsLoginSubmitting = (state: RootState) =>
-  state.auth.loginStatus === 'loading';
+  state.auth.loginStatus === true;
 
 export default authSlice.reducer;

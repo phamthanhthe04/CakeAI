@@ -59,28 +59,15 @@ export default function RegisterForm() {
     password: string;
     confirmPassword: string;
   }) => {
-    try {
-      const payload: RegisterRequest = {
-        email: values.email,
-        password: values.password,
-        phone: values.phone,
-        name: values.name,
-        agentCode: null,
-      };
-
-      await registerMutation(payload).unwrap();
-
-      router.push('/');
-    } catch (error) {
-      notification.warning({
-        title: 'Notification',
-        description: getApiErrorMessage(
-          error,
-          'Đăng ký thất bại, vui lòng kiểm tra lại thông tin',
-        ),
-        placement: 'topRight',
-      });
-    }
+    const payload: RegisterRequest = {
+      email: values.email,
+      password: values.password,
+      phone: values.phone,
+      name: values.name,
+      agentCode: null,
+    };
+    await registerMutation(payload).unwrap();
+    router.push('/');
   };
 
   return (

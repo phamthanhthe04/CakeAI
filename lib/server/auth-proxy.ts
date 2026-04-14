@@ -13,6 +13,16 @@ type SessionProxyOptions<TData extends JsonObject> = {
   sanitizeData: (data: TData) => TData;
 };
 
+const DEFAULT_LANGUAGE = 'vi';
+
+function buildProxyHeaders() {
+  return {
+    'Content-Type': 'application/json',
+    'Accept-Language': DEFAULT_LANGUAGE,
+    'X-Language': DEFAULT_LANGUAGE,
+  };
+}
+
 // Hàm lấy base url từ env
 function getApiBaseUrl(): string | null {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL?.trim();
@@ -50,9 +60,7 @@ export async function proxyAuthPost(
   const payload = await request.json();
   const upstream = await fetch(`${apiBaseUrl}${endpoint}`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: buildProxyHeaders(),
     body: JSON.stringify(payload),
     cache: 'no-store',
   });
@@ -75,9 +83,7 @@ export async function proxyAuthPostWithSession<TData extends JsonObject>(
   const payload = await request.json();
   const upstream = await fetch(`${apiBaseUrl}${options.endpoint}`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: buildProxyHeaders(),
     body: JSON.stringify(payload),
     cache: 'no-store',
   });
