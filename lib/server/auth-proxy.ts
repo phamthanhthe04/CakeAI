@@ -34,16 +34,33 @@ async function parseUpstreamJson(response: Response): Promise<JsonObject> {
   try {
     return (await response.json()) as JsonObject;
   } catch {
-    return { message: 'Invalid JSON response from upstream service' };
+    return { message: 'Phản hồi JSON từ dịch vụ backend không hợp lệ' };
   }
 }
 
 // Hàm trả về response khi missing base url
 export function missingBaseUrlResponse() {
   return NextResponse.json(
-    { message: 'Missing NEXT_PUBLIC_API_BASE_URL' },
+    { message: 'Thiếu cấu hình NEXT_PUBLIC_API_BASE_URL' },
     { status: 500 },
   );
+}
+
+export function authProxyUnexpectedErrorResponse(message: string) {
+  return NextResponse.json({ message }, { status: 500 });
+}
+
+export function sanitizeAuthTokens<TData extends JsonObject>(
+  data: TData,
+  tokenFields: Array<keyof TData>,
+): TData {
+  const sanitized = { ...data } as Record<string, unknown>;
+
+  for (const field of tokenFields) {
+    sanitized[field as string] = undefined;
+  }
+
+  return sanitized as TData;
 }
 
 // Hàm proxy chung cho các endpoint POST không cần set session/cookie.
@@ -69,7 +86,7 @@ export async function proxyAuthPost(
   return NextResponse.json(json, { status: upstream.status });
 }
 
-// Hàm proxy cho login/register: gọi upstream, lấy token, set cookie và ẩn token trước khi trả về client.
+// Hàm proxy cho login/register: gọi backend, lấy token, set cookie và ẩn token trước khi trả về client.
 export async function proxyAuthPostWithSession<TData extends JsonObject>(
   request: Request,
   options: SessionProxyOptions<TData>,
