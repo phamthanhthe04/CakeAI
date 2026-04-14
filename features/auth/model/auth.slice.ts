@@ -22,14 +22,14 @@ export type SetCredentialsPayload = {
 type AuthState = {
   user: AuthUser | null;
   isAuthenticated: boolean;
-  loginStatus: boolean;
+  isLoginSubmitting: boolean;
   loginError: string | null;
 };
 
 const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
-  loginStatus: false,
+  isLoginSubmitting: false,
   loginError: null,
 };
 
@@ -77,7 +77,13 @@ export const loginWithPassword = createAsyncThunk<
     return {
       user: toAuthUser(json.data),
     };
-  } catch {
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return rejectWithValue(
+        error.message || 'Không thể kết nối máy chủ, vui lòng thử lại',
+      );
+    }
+
     return rejectWithValue('Không thể kết nối máy chủ, vui lòng thử lại');
   }
 });
@@ -98,17 +104,17 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(loginWithPassword.pending, (state) => {
-        state.loginStatus = true;
+        state.isLoginSubmitting = true;
         state.loginError = null;
       })
       .addCase(loginWithPassword.fulfilled, (state, action) => {
-        state.loginStatus = false;
+        state.isLoginSubmitting = false;
         state.loginError = null;
         state.user = action.payload.user;
         state.isAuthenticated = true;
       })
       .addCase(loginWithPassword.rejected, (state, action) => {
-        state.loginStatus = false;
+        state.isLoginSubmitting = false;
         state.loginError =
           action.payload || 'Tài khoản hoặc mật khẩu không chính xác';
       });
@@ -121,9 +127,10 @@ export const selectAuth = (state: RootState) => state.auth;
 export const selectIsAuthenticated = (state: RootState) =>
   state.auth.isAuthenticated;
 export const selectCurrentUser = (state: RootState) => state.auth.user;
-export const selectLoginStatus = (state: RootState) => state.auth.loginStatus;
+export const selectLoginStatus = (state: RootState) =>
+  state.auth.isLoginSubmitting;
 export const selectLoginError = (state: RootState) => state.auth.loginError;
 export const selectIsLoginSubmitting = (state: RootState) =>
-  state.auth.loginStatus === true;
+  state.auth.isLoginSubmitting;
 
 export default authSlice.reducer;
