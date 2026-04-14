@@ -3,6 +3,7 @@ import {
   setCredentials,
   type AuthUser,
 } from '@/features/auth/model/auth.slice';
+import { AUTH_ENDPOINTS } from './auth.endpoints';
 import type {
   ApiResponse,
   ForgotPasswordRequest,
@@ -47,17 +48,22 @@ function toAuthUser(
   };
 }
 
+function authDataResponse<T>(response: ApiResponse<T>): T {
+  // Chuẩn hóa response từ dạng ApiResponse<T> -> T để component dùng trực tiếp.
+  return response.data;
+}
+
 export const authApi = baseApi.injectEndpoints({
   overrideExisting: false,
   endpoints: (builder) => ({
     loginWithGoogle: builder.mutation<GoogleLoginResponse, GoogleLoginRequest>({
+      // UI chỉ gọi endpoint nội bộ /api/auth/*, không gọi thẳng API upstream.
       query: (body) => ({
-        url: '/api/auth/login-google',
+        url: AUTH_ENDPOINTS.loginWithGoogle,
         method: 'POST',
         body,
       }),
-      transformResponse: (response: ApiResponse<GoogleLoginResponse>) =>
-        response.data,
+      transformResponse: authDataResponse<GoogleLoginResponse>,
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
@@ -79,21 +85,19 @@ export const authApi = baseApi.injectEndpoints({
       ForgotPasswordRequest
     >({
       query: (body) => ({
-        url: '/api/auth/forgot-password',
+        url: AUTH_ENDPOINTS.forgotPassword,
         method: 'POST',
         body,
       }),
-      transformResponse: (response: ApiResponse<ForgotPasswordResponse>) =>
-        response.data,
+      transformResponse: authDataResponse<ForgotPasswordResponse>,
     }),
     register: builder.mutation<RegisterResponse, RegisterRequest>({
       query: (body) => ({
-        url: '/api/auth/register',
+        url: AUTH_ENDPOINTS.register,
         method: 'POST',
         body,
       }),
-      transformResponse: (response: ApiResponse<RegisterResponse>) =>
-        response.data,
+      transformResponse: authDataResponse<RegisterResponse>,
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
@@ -115,12 +119,11 @@ export const authApi = baseApi.injectEndpoints({
       ResetPasswordRequest
     >({
       query: (body) => ({
-        url: '/api/auth/set-password',
+        url: AUTH_ENDPOINTS.resetPassword,
         method: 'POST',
         body,
       }),
-      transformResponse: (response: ApiResponse<ResetPasswordResponse>) =>
-        response.data,
+      transformResponse: authDataResponse<ResetPasswordResponse>,
     }),
   }),
 });

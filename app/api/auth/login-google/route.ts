@@ -1,5 +1,4 @@
-import { NextResponse } from 'next/server';
-import { setAuthCookies } from '@/lib/server/auth-session';
+import { proxyAuthPostWithSession } from '@/lib/server/auth-proxy';
 import type { ApiResponse, GoogleLoginResponse } from '@/types';
 
 type GoogleLoginApiPayload = ApiResponse<GoogleLoginResponse>;
@@ -13,50 +12,20 @@ function sanitizeUser(data: GoogleLoginResponse): GoogleLoginResponse {
 }
 
 export async function POST(request: Request) {
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL?.trim();
-
-  if (!apiBaseUrl) {
-    return NextResponse.json(
-      { message: 'Missing NEXT_PUBLIC_API_BASE_URL' },
-      { status: 500 },
-    );
-  }
-
   try {
-    const payload = await request.json();
-    const upstream = await fetch(`${apiBaseUrl}/api/v1/auth/login-google`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    // Google login thành công sẽ set cookie và loại bỏ token trước khi trả về FE.
+    return await proxyAuthPostWithSession<GoogleLoginApiPayload['data']>(
+      request,
+      {
+        endpoint: '/api/v1/auth/login-google',
+        missingTokenMessage:
+          'Missing access token from upstream Google login response',
+        pickAccessToken: (data) => data?.token,
+        sanitizeData: sanitizeUser,
       },
-      body: JSON.stringify(payload),
-      cache: 'no-store',
-    });
-
-    const json = (await upstream.json()) as Partial<GoogleLoginApiPayload>;
-
-    if (!upstream.ok || !json.data) {
-      return NextResponse.json(json, { status: upstream.status });
-    }
-
-    if (!json.data.token) {
-      return NextResponse.json(
-        { message: 'Missing access token from upstream Google login response' },
-        { status: 502 },
-      );
-    }
-
-    await setAuthCookies({
-      accessToken: json.data.token,
-      refreshToken: json.data.refreshToken,
-    });
-
-    return NextResponse.json({
-      ...json,
-      data: sanitizeUser(json.data),
-    });
+    );
   } catch {
-    return NextResponse.json(
+    return Response.json(
       { message: 'Unable to process Google login request' },
       { status: 500 },
     );
