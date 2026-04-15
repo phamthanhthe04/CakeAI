@@ -1,21 +1,18 @@
 import { NextResponse } from 'next/server';
 import { setAuthCookies } from '@/lib/server/auth-session';
 
-type JsonObject = Record<string, unknown>;
-type ApiPayload<TData> = {
-  data?: TData;
-} & JsonObject;
-
-type SessionProxyOptions<TData extends JsonObject> = {
-  endpoint: string;
-  missingTokenMessage: string;
-  pickAccessToken: (data: TData) => string | undefined;
-  sanitizeData: (data: TData) => TData;
-};
+type JsonObject = Record<string, any>;
 
 const DEFAULT_LANGUAGE = 'vi';
+const ERROR_INVALID_BACKEND_JSON =
+  'Phản hồi JSON từ dịch vụ backend không hợp lệ';
+const ERROR_MISSING_BASE_URL = 'Thiếu cấu hình NEXT_PUBLIC_API_BASE_URL';
 
-function buildProxyHeaders() {
+function getApiBaseUrl(): string | null {
+  return process.env.NEXT_PUBLIC_API_BASE_URL?.trim() || null;
+}
+
+function buildHeaders() {
   return {
     'Content-Type': 'application/json',
     'Accept-Language': DEFAULT_LANGUAGE,
@@ -23,25 +20,17 @@ function buildProxyHeaders() {
   };
 }
 
-// Hàm lấy base url từ env
-function getApiBaseUrl(): string | null {
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL?.trim();
-  return baseUrl || null;
-}
-
-// Hàm parse json từ response
-async function parseUpstreamJson(response: Response): Promise<JsonObject> {
+async function parseJson(res: Response): Promise<JsonObject> {
   try {
-    return (await response.json()) as JsonObject;
+    return await res.json();
   } catch {
-    return { message: 'Phản hồi JSON từ dịch vụ backend không hợp lệ' };
+    return { message: ERROR_INVALID_BACKEND_JSON };
   }
 }
 
-// Hàm trả về response khi missing base url
 export function missingBaseUrlResponse() {
   return NextResponse.json(
-    { message: 'Thiếu cấu hình NEXT_PUBLIC_API_BASE_URL' },
+    { message: ERROR_MISSING_BASE_URL },
     { status: 500 },
   );
 }
@@ -50,62 +39,57 @@ export function authProxyUnexpectedErrorResponse(message: string) {
   return NextResponse.json({ message }, { status: 500 });
 }
 
-export function sanitizeAuthTokens<TData extends JsonObject>(
-  data: TData,
-  tokenFields: Array<keyof TData>,
-): TData {
-  const sanitized = { ...data } as Record<string, unknown>;
-
-  for (const field of tokenFields) {
-    sanitized[field as string] = undefined;
-  }
-
-  return sanitized as TData;
+export function sanitizeAuthTokens<T extends JsonObject>(
+  data: T,
+  fields: (keyof T)[],
+): T {
+  const sanitized = { ...data };
+  for (const field of fields) (sanitized as any)[field] = undefined;
+  return sanitized;
 }
 
-// Hàm proxy chung cho các endpoint POST không cần set session/cookie.
+// Proxy POST request, no session/cookie
 export async function proxyAuthPost(
   request: Request,
   endpoint: string,
 ): Promise<NextResponse> {
   const apiBaseUrl = getApiBaseUrl();
-
-  if (!apiBaseUrl) {
-    return missingBaseUrlResponse();
-  }
+  if (!apiBaseUrl) return missingBaseUrlResponse();
 
   const payload = await request.json();
-  const upstream = await fetch(`${apiBaseUrl}${endpoint}`, {
+  const upstream = await fetch(apiBaseUrl + endpoint, {
     method: 'POST',
-    headers: buildProxyHeaders(),
+    headers: buildHeaders(),
     body: JSON.stringify(payload),
     cache: 'no-store',
   });
-
-  const json = await parseUpstreamJson(upstream);
+  const json = await parseJson(upstream);
   return NextResponse.json(json, { status: upstream.status });
 }
 
-// Hàm proxy cho login/register: gọi backend, lấy token, set cookie và ẩn token trước khi trả về client.
-export async function proxyAuthPostWithSession<TData extends JsonObject>(
+// Proxy POST request, set session/cookie if success
+interface SessionProxyOptions<T extends JsonObject> {
+  endpoint: string;
+  missingTokenMessage: string;
+  pickAccessToken: (data: T) => string | undefined;
+  sanitizeData: (data: T) => T;
+}
+
+export async function proxyAuthPostWithSession<T extends JsonObject>(
   request: Request,
-  options: SessionProxyOptions<TData>,
+  options: SessionProxyOptions<T>,
 ): Promise<NextResponse> {
   const apiBaseUrl = getApiBaseUrl();
-
-  if (!apiBaseUrl) {
-    return missingBaseUrlResponse();
-  }
+  if (!apiBaseUrl) return missingBaseUrlResponse();
 
   const payload = await request.json();
-  const upstream = await fetch(`${apiBaseUrl}${options.endpoint}`, {
+  const upstream = await fetch(apiBaseUrl + options.endpoint, {
     method: 'POST',
-    headers: buildProxyHeaders(),
+    headers: buildHeaders(),
     body: JSON.stringify(payload),
     cache: 'no-store',
   });
-
-  const json = (await parseUpstreamJson(upstream)) as ApiPayload<TData>;
+  const json = (await parseJson(upstream)) as { data?: T } & JsonObject;
 
   if (!upstream.ok || !json.data) {
     return NextResponse.json(json, { status: upstream.status });
@@ -121,8 +105,7 @@ export async function proxyAuthPostWithSession<TData extends JsonObject>(
 
   await setAuthCookies({
     accessToken,
-    refreshToken:
-      (json.data as { refreshToken?: string }).refreshToken ?? undefined,
+    refreshToken: (json.data as any).refreshToken ?? undefined,
   });
 
   return NextResponse.json({

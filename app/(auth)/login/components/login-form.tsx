@@ -24,7 +24,6 @@ export default function LoginForm() {
   const router = useRouter();
   const { notification } = AntdApp.useApp();
   const { isGoogleSubmitting, handleGoogleLogin } = useGoogleLogin({
-    // Keep google hook focused on auth; redirect is centralized below.
     onSuccess: () => {},
   });
   const isAuthenticated = useAppSelector(selectIsAuthenticated);

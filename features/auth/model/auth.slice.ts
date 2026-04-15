@@ -3,6 +3,7 @@ import {
   createSlice,
   type PayloadAction,
 } from '@reduxjs/toolkit';
+import { startGlobalLoading, stopGlobalLoading } from '@/lib/utils/top-loader';
 import type { RootState } from '@/store/index';
 import type { ApiResponse, LoginRequest, LoginResponse } from '@/types';
 
@@ -49,6 +50,10 @@ export const loginWithPassword = createAsyncThunk<
   LoginRequest,
   { rejectValue: string }
 >('auth/loginWithPassword', async (payload, { rejectWithValue }) => {
+  if (typeof window !== 'undefined') {
+    startGlobalLoading();
+  }
+
   try {
     const response = await fetch('/api/auth/login', {
       method: 'POST',
@@ -85,6 +90,10 @@ export const loginWithPassword = createAsyncThunk<
     }
 
     return rejectWithValue('Không thể kết nối máy chủ, vui lòng thử lại');
+  } finally {
+    if (typeof window !== 'undefined') {
+      stopGlobalLoading();
+    }
   }
 });
 

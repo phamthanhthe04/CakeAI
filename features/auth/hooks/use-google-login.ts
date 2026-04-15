@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { env } from '@/config/env';
 import { useLoginWithGoogleMutation } from '@/features/auth';
-import { getApiErrorMessage } from '@/lib/utils/api-error';
 
 type GoogleTokenResponse = {
   access_token?: string;
@@ -141,7 +140,7 @@ export function useGoogleLogin(options?: UseGoogleLoginOptions) {
         } catch (error) {
           notification.warning({
             title: 'Notification',
-            description: getApiErrorMessage(error, 'Đăng nhập Google thất bại'),
+            description: 'Đăng nhập Google thất bại',
             placement: 'topRight',
           });
         } finally {
