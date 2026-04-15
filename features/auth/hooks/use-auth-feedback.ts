@@ -26,7 +26,7 @@ export function useAuthFeedback() {
 
         if (options?.successMessage) {
           notification.success({
-            message: options.successMessage,
+            title: options.successMessage,
             placement: 'topRight',
           });
         }

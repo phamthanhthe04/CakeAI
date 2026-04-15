@@ -4,36 +4,11 @@ import { Form, Input, Button } from 'antd';
 import Image from 'next/image';
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import {
-  loginWithPassword,
-  selectIsLoginSubmitting,
-  useAuthFeedback,
-  useGoogleLogin,
-} from '@/features/auth';
-import { startRouteLoading } from '@/lib/utils/top-loader';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import type { LoginRequest } from '@/types';
+import { useLogin } from '../hooks/use-login';
 
 export default function LoginForm() {
-  const dispatch = useAppDispatch();
-  const isSubmitting = useAppSelector(selectIsLoginSubmitting);
-  const router = useRouter();
-  const { runWithFeedback } = useAuthFeedback();
-  const { isGoogleSubmitting, handleGoogleLogin } = useGoogleLogin({
-    onSuccess: () => {},
-  });
-
-  const handleSubmit = (values: LoginRequest) => {
-    runWithFeedback(() => dispatch(loginWithPassword(values)).unwrap(), {
-      errorMessage: 'Đăng nhập thất bại',
-      fallbackErrorMessage: 'Tài khoản hoặc mật khẩu không chính xác',
-      onSuccess: () => {
-        startRouteLoading();
-        router.push('/');
-      },
-    });
-  };
+  const { isSubmitting, isGoogleSubmitting, handleGoogleLogin, handleSubmit } =
+    useLogin();
 
   return (
     <div className='flex-1 flex justify-center items-center'>
