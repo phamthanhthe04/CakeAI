@@ -1,16 +1,14 @@
 'use client';
 
-import { App as AntdApp, Form, Input, Button } from 'antd';
+import { Form, Input, Button } from 'antd';
 import Image from 'next/image';
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import {
-  clearLoginError,
   loginWithPassword,
-  selectIsAuthenticated,
   selectIsLoginSubmitting,
+  useAuthFeedback,
   useGoogleLogin,
 } from '@/features/auth';
 import { startRouteLoading } from '@/lib/utils/top-loader';
@@ -20,36 +18,21 @@ import type { LoginRequest } from '@/types';
 export default function LoginForm() {
   const dispatch = useAppDispatch();
   const isSubmitting = useAppSelector(selectIsLoginSubmitting);
-  const loginError = useAppSelector((state) => state.auth.loginError);
   const router = useRouter();
-  const { notification } = AntdApp.useApp();
+  const { runWithFeedback } = useAuthFeedback();
   const { isGoogleSubmitting, handleGoogleLogin } = useGoogleLogin({
     onSuccess: () => {},
   });
-  const isAuthenticated = useAppSelector(selectIsAuthenticated);
-
-  useEffect(() => {
-    if (loginError) {
-      notification.warning({
-        title: 'Notification',
-        description: loginError,
-        placement: 'topRight',
-      });
-      dispatch(clearLoginError());
-    }
-  }, [dispatch, loginError, notification]);
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      return;
-    }
-
-    startRouteLoading();
-    router.push('/');
-  }, [isAuthenticated, router]);
 
   const handleSubmit = (values: LoginRequest) => {
-    dispatch(loginWithPassword(values));
+    runWithFeedback(() => dispatch(loginWithPassword(values)).unwrap(), {
+      errorMessage: 'Đăng nhập thất bại',
+      fallbackErrorMessage: 'Tài khoản hoặc mật khẩu không chính xác',
+      onSuccess: () => {
+        startRouteLoading();
+        router.push('/');
+      },
+    });
   };
 
   return (
