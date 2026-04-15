@@ -51,6 +51,14 @@ export type ForgotPasswordResponse = {
   code?: string;
 };
 
+export type RegisterFormValues = {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  confirmPassword: string;
+};
+
 export type RegisterRequest = {
   email: string;
   password: string;

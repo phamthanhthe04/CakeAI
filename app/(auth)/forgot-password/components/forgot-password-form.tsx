@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForgotPasswordMutation } from '@/features/auth';
-import { getApiErrorMessage } from '@/lib/utils/api-error';
 
 type ForgotPasswordFormValues = {
   email: string;
@@ -27,10 +26,10 @@ export default function ForgotPasswordForm() {
     } catch (error) {
       notification.warning({
         title: 'Notification',
-        description: getApiErrorMessage(
-          error,
-          'Email không tồn tại trong hệ thống',
-        ),
+        description:
+          error instanceof Error
+            ? error.message
+            : 'Gửi yêu cầu đặt lại mật khẩu thất bại',
         placement: 'topRight',
       });
     }

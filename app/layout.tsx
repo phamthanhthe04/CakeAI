@@ -19,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang='en' className={inter.variable}>
+    <html lang='vi' className={inter.variable}>
       <body suppressHydrationWarning>
         <Suspense fallback={null}>
           <RouteTopLoader />

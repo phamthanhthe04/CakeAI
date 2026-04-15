@@ -1,13 +1,12 @@
 'use client';
 
-import { App as AntdApp, Button, Form, Input } from 'antd';
+import { Button, Form, Input, notification } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useGoogleLogin, useRegisterMutation } from '@/features/auth';
-import { getApiErrorMessage } from '@/lib/utils/api-error';
-import type { RegisterRequest } from '@/types';
+import type { RegisterRequest, RegisterFormValues } from '@/types';
 
 function UserIcon() {
   return (
@@ -44,30 +43,29 @@ function PhoneIcon() {
 }
 
 export default function RegisterForm() {
-  const [form] = Form.useForm();
   const [registerMutation, { isLoading: isSubmitting }] = useRegisterMutation();
   const router = useRouter();
-  const { notification } = AntdApp.useApp();
   const { isGoogleSubmitting, handleGoogleLogin } = useGoogleLogin({
-    onSuccess: () => router.push('/'),
+    onSuccess: () => {},
   });
 
-  const handleSubmit = async (values: {
-    name: string;
-    email: string;
-    phone: string;
-    password: string;
-    confirmPassword: string;
-  }) => {
+  const handleSubmit = async (values: RegisterFormValues) => {
+    const { confirmPassword: _confirmPassword, ...rest } = values;
+
     const payload: RegisterRequest = {
-      email: values.email,
-      password: values.password,
-      phone: values.phone,
-      name: values.name,
+      ...rest,
       agentCode: null,
     };
-    await registerMutation(payload).unwrap();
-    router.push('/');
+    try {
+      await registerMutation(payload).unwrap();
+      router.push('/');
+    } catch (error) {
+      notification.warning({
+        title: 'Notification',
+        description: 'Đăng ký thất bại. Vui lòng thử lại.',
+        placement: 'topRight',
+      });
+    }
   };
 
   return (
@@ -77,12 +75,7 @@ export default function RegisterForm() {
           Đăng ký
         </div>
 
-        <Form
-          form={form}
-          layout='vertical'
-          onFinish={handleSubmit}
-          className='w-full'
-        >
+        <Form layout='vertical' onFinish={handleSubmit} className='w-full'>
           <Form.Item
             name='name'
             rules={[{ required: true, message: 'Vui lòng nhập họ tên!' }]}
@@ -210,11 +203,11 @@ export default function RegisterForm() {
           </Form.Item>
         </Form>
         {/* Login Google */}
-        <div className=''>
+        <div>
           <button
             type='button'
             onClick={handleGoogleLogin}
-            disabled={isGoogleSubmitting}
+            disabled={isGoogleSubmitting || isSubmitting}
             className='w-full flex items-center justify-center gap-x-2 h-9 cursor-pointer bg-[linear-gradient(90deg,var(--CakeAI-liner-gradient-start-primary-color),var(--CakeAI-liner-gradient-end-primary-color))] rounded-lg transition-opacity disabled:opacity-70 disabled:cursor-not-allowed'
           >
             <div className='bg-white flex justify-center items-center rounded-md w-7 h-7'>
