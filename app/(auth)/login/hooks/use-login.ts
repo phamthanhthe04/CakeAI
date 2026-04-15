@@ -16,10 +16,7 @@ export function useLogin() {
   const isSubmitting = useAppSelector(selectIsLoginSubmitting);
   const router = useRouter();
   const { runWithFeedback } = useAuthFeedback();
-  const { isGoogleSubmitting, handleGoogleLogin } = useGoogleLogin({
-    onSuccess: () => {},
-  });
-
+  const { isGoogleSubmitting, handleGoogleLogin } = useGoogleLogin();
   const login = (values: LoginRequest) => {
     return dispatch(loginWithPassword(values)).unwrap();
   };
