@@ -44,39 +44,35 @@ export const loginWithPassword = createApiAsyncThunk<
   SetCredentialsPayload,
   LoginRequest
 >('auth/loginWithPassword', async (payload) => {
-  try {
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
+  const response = await fetch('/api/auth/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
 
-    const json = (await response.json()) as Partial<ApiResponse<LoginResponse>>;
+  const json = (await response.json()) as Partial<ApiResponse<LoginResponse>>;
 
-    if (!response.ok) {
-      throw new ApiError(
-        json.message || 'Tài khoản hoặc mật khẩu không chính xác',
-      );
-    }
-
-    if (typeof json.code === 'number' && json.code !== 200) {
-      throw new ApiError(
-        json.message || 'Tài khoản hoặc mật khẩu không chính xác',
-      );
-    }
-
-    if (!json.data) {
-      throw new ApiError('Không nhận được dữ liệu đăng nhập từ hệ thống');
-    }
-
-    return {
-      user: toAuthUser(json.data),
-    };
-  } catch (error: unknown) {
-    throw ApiError.from(error, 'Không thể kết nối máy chủ, vui lòng thử lại');
+  if (!response.ok) {
+    throw new ApiError(
+      json.message || 'Tài khoản hoặc mật khẩu không chính xác',
+    );
   }
+
+  if (typeof json.code === 'number' && json.code !== 200) {
+    throw new ApiError(
+      json.message || 'Tài khoản hoặc mật khẩu không chính xác',
+    );
+  }
+
+  if (!json.data) {
+    throw new ApiError('Không nhận được dữ liệu đăng nhập từ hệ thống');
+  }
+
+  return {
+    user: toAuthUser(json.data),
+  };
 });
 
 const authSlice = createSlice({
