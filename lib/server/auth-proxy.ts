@@ -1,7 +1,10 @@
 import { NextResponse } from 'next/server';
 import { setAuthCookies } from '@/lib/server/auth-session';
 
-type JsonObject = Record<string, any>;
+type JsonObject = Record<string, unknown>;
+type RefreshTokenCarrier = {
+  refreshToken?: string | null;
+};
 
 const DEFAULT_LANGUAGE = 'vi';
 const ERROR_INVALID_BACKEND_JSON =
@@ -43,9 +46,14 @@ export function sanitizeAuthTokens<T extends JsonObject>(
   data: T,
   fields: (keyof T)[],
 ): T {
-  const sanitized = { ...data };
-  for (const field of fields) (sanitized as any)[field] = undefined;
-  return sanitized;
+  const tokenReset = Object.fromEntries(
+    fields.map((field) => [field, undefined] as const),
+  ) as Partial<Record<keyof T, undefined>>;
+
+  return {
+    ...data,
+    ...tokenReset,
+  } as T;
 }
 
 // Proxy POST request, no session/cookie
@@ -75,10 +83,9 @@ interface SessionProxyOptions<T extends JsonObject> {
   sanitizeData: (data: T) => T;
 }
 
-export async function proxyAuthPostWithSession<T extends JsonObject>(
-  request: Request,
-  options: SessionProxyOptions<T>,
-): Promise<NextResponse> {
+export async function proxyAuthPostWithSession<
+  T extends JsonObject & RefreshTokenCarrier,
+>(request: Request, options: SessionProxyOptions<T>): Promise<NextResponse> {
   const apiBaseUrl = getApiBaseUrl();
   if (!apiBaseUrl) return missingBaseUrlResponse();
 
@@ -105,7 +112,7 @@ export async function proxyAuthPostWithSession<T extends JsonObject>(
 
   await setAuthCookies({
     accessToken,
-    refreshToken: (json.data as any).refreshToken ?? undefined,
+    refreshToken: json.data.refreshToken ?? undefined,
   });
 
   return NextResponse.json({

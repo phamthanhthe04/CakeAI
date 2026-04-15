@@ -137,7 +137,7 @@ export function useGoogleLogin(options?: UseGoogleLoginOptions) {
           }).unwrap();
 
           handleLoginSuccess();
-        } catch (error) {
+        } catch {
           notification.warning({
             title: 'Notification',
             description: 'Đăng nhập Google thất bại',

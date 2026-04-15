@@ -7,9 +7,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useGoogleLogin, useRegisterMutation } from '@/features/auth';
 import type { RegisterRequest, RegisterFormValues } from '@/types';
-import { selectIsAuthenticated } from '@/features/auth';
-import { useAppSelector } from '@/store/hooks';
-import { useEffect } from 'react';
 
 function UserIcon() {
   return (

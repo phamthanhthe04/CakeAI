@@ -1,9 +1,14 @@
-import { AsyncThunk, createAsyncThunk } from '@reduxjs/toolkit';
+import {
+  type AsyncThunk,
+  createAsyncThunk,
+  type Dispatch,
+  type UnknownAction,
+} from '@reduxjs/toolkit';
 import { ApiError } from '@/lib/utils/api-error';
 
 type AsyncThunkConfig = {
   state?: unknown;
-  dispatch?: any;
+  dispatch?: Dispatch<UnknownAction>;
   extra?: unknown;
   rejectValue?: unknown;
   serializedErrorType?: unknown;
