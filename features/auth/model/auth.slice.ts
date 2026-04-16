@@ -1,6 +1,8 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { createApiAsyncThunk } from '@/lib/utils/create-api-async-thunk';
-import { ApiError } from '@/lib/utils/api-error';
+import {
+  createSlice,
+  type PayloadAction,
+  createAsyncThunk,
+} from '@reduxjs/toolkit';
 import type { RootState } from '@/store/index';
 import type { ApiResponse, LoginRequest, LoginResponse } from '@/types';
 
@@ -40,39 +42,48 @@ function toAuthUser(data: LoginResponse): AuthUser {
   };
 }
 
-export const loginWithPassword = createApiAsyncThunk<
+export const loginWithPassword = createAsyncThunk<
   SetCredentialsPayload,
-  LoginRequest
->('auth/loginWithPassword', async (payload) => {
-  const response = await fetch('/api/auth/login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  });
+  LoginRequest,
+  { rejectValue: string }
+>('auth/loginWithPassword', async (payload, { rejectWithValue }) => {
+  try {
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
 
-  const json = (await response.json()) as Partial<ApiResponse<LoginResponse>>;
+    const json = (await response.json()) as Partial<ApiResponse<LoginResponse>>;
 
-  if (!response.ok) {
-    throw new ApiError(
-      json.message || 'Tài khoản hoặc mật khẩu không chính xác',
-    );
+    if (!response.ok) {
+      return rejectWithValue(
+        json.message || 'Tài khoản hoặc mật khẩu không chính xác',
+      );
+    }
+
+    if (typeof json.code === 'number' && json.code !== 200 && json.message) {
+      return rejectWithValue(json.message);
+    }
+
+    if (!json.data) {
+      return rejectWithValue('Không nhận được dữ liệu đăng nhập từ hệ thống');
+    }
+
+    return {
+      user: toAuthUser(json.data),
+    };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return rejectWithValue(
+        error.message || 'Không thể kết nối máy chủ, vui lòng thử lại',
+      );
+    }
+
+    return rejectWithValue('Không thể kết nối máy chủ, vui lòng thử lại');
   }
-
-  if (typeof json.code === 'number' && json.code !== 200) {
-    throw new ApiError(
-      json.message || 'Tài khoản hoặc mật khẩu không chính xác',
-    );
-  }
-
-  if (!json.data) {
-    throw new ApiError('Không nhận được dữ liệu đăng nhập từ hệ thống');
-  }
-
-  return {
-    user: toAuthUser(json.data),
-  };
 });
 
 const authSlice = createSlice({
@@ -97,7 +108,7 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.isAuthenticated = true;
       })
-      .addCase(loginWithPassword.rejected, (state) => {
+      .addCase(loginWithPassword.rejected, (state, action) => {
         state.isLoginSubmitting = false;
       });
   },

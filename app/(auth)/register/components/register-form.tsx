@@ -50,7 +50,7 @@ export default function RegisterForm() {
   });
 
   const handleSubmit = async (values: RegisterFormValues) => {
-    const { confirmPassword: _confirmPassword, ...rest } = values;
+    const { confirmPassword, ...rest } = values;
 
     const payload: RegisterRequest = {
       ...rest,
@@ -62,7 +62,8 @@ export default function RegisterForm() {
     } catch (error) {
       notification.warning({
         title: 'Notification',
-        description: 'Đăng ký thất bại. Vui lòng thử lại.',
+        description:
+          error instanceof Error ? error.message : 'Đăng ký thất bại',
         placement: 'topRight',
       });
     }
