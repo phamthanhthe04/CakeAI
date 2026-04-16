@@ -1,35 +1,27 @@
 'use client';
 
+import { App as AntdApp } from 'antd';
 import { useRouter } from 'next/navigation';
 import {
   loginWithPassword,
   selectIsLoginSubmitting,
-  useAuthFeedback,
   useGoogleLogin,
 } from '@/features/auth';
+import { getApiErrorMessage } from '@/lib/utils/api-error';
 import { startRouteLoading } from '@/lib/utils/top-loader';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import type { LoginRequest } from '@/types';
+import { useEffect } from 'react';
 
 export function useLogin() {
   const dispatch = useAppDispatch();
   const isSubmitting = useAppSelector(selectIsLoginSubmitting);
   const router = useRouter();
-  const { runWithFeedback } = useAuthFeedback();
+  const { notification } = AntdApp.useApp();
   const { isGoogleSubmitting, handleGoogleLogin } = useGoogleLogin();
-  const login = (values: LoginRequest) => {
-    return dispatch(loginWithPassword(values)).unwrap();
-  };
 
-  const onSuccess = () => {
-    startRouteLoading();
-    router.push('/');
-  };
-
-  const handleSubmit = (values: LoginRequest) => {
-    runWithFeedback(() => login(values), {
-      onSuccess,
-    });
+  const handleSubmit = (payload: LoginRequest) => {
+    dispatch(loginWithPassword(payload));
   };
 
   return {
